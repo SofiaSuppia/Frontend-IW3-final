@@ -57,6 +57,8 @@
             <span class="forgot-link" @click="handleForgotPassword">¿Olvidaste tu contraseña?</span>
           </div>
 
+          <p v-if="error" class="error-msg">{{ error }}</p>
+
           <Button label="INGRESAR AHORA" class="login-btn" @click="handleLogin" />
 
           <div class="footer-links">
@@ -72,13 +74,24 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import authService from '../services/authService'; // <--- 1. IMPORTAR ESTO
 
 const router = useRouter();
 const username = ref('');
 const password = ref('');
+const error = ref(''); // <--- 2. AGREGAR ESTA VARIABLE
 
-const handleLogin = () => {
-  console.log('Login con:', username.value, password.value);
+// 3. REEMPLAZAR LA FUNCIÓN handleLogin POR ESTA:
+const handleLogin = async () => {
+  error.value = ''; // Limpiar errores previos
+  try {
+    await authService.login(username.value, password.value);
+    // Si el login es exitoso, redirigir al inicio
+    router.push('/'); 
+  } catch (err) {
+    console.error(err);
+    error.value = 'Usuario o contraseña incorrectos';
+  }
 };
 
 const handleForgotPassword = () => {
@@ -271,6 +284,14 @@ label { font-size: 0.9rem; color: #F1F6F9; }
   cursor: pointer;
 }
 .footer-links span:hover { color: #fff; text-decoration: underline; }
+
+.error-msg {
+  color: #ff6b6b;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
 
 /* --- RESPONSIVE --- */
 @media (max-width: 900px) {
