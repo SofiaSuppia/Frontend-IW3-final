@@ -2,7 +2,9 @@ import axios from 'axios';
 
 // Aquí definimos la dirección base de tu backend
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api/v1', 
+    // ANTES DECÍA: 'http://localhost:8080/api/v1'
+    // AHORA DEBE DECIR:
+    baseURL: '/api/v1', 
 });
 
 // Esto es un "Interceptor":

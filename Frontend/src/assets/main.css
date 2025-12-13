@@ -14,3 +14,34 @@ html, body {
   max-width: none; /* Importante: quita el límite de ancho por defecto de Vue */
   display: block;
 }
+
+:root {
+  /* --- PALETA DE COLORES FUELOPS --- */
+
+  /* Color Primario: Azul Petróleo Profundo */
+  /* Uso: Sidebar, Fondos oscuros, Títulos principales */
+  --color-primary: #0F3460;
+  --color-primary-dark: #16213E; /* Para el fondo general */
+
+  /* Color Secundario: Naranja Ámbar / Fuego */
+  /* Uso: Botones de acción, Iconos activos, Logo */
+  --color-accent: #E94560;
+  --color-accent-hover: #ff5773; /* Un poco más claro para el hover */
+  --color-accent-orange: #F9A826; /* Alternativa naranja seguridad */
+
+  /* Colores de Texto y Fondos Claros */
+  --color-text-light: #F1F6F9; /* Blanco Humo (Texto sobre fondo oscuro) */
+  --color-text-muted: #aebbc7; /* Gris azulado para subtítulos */
+  
+  /* Fondos de Paneles (Cards/Tablas) */
+  --bg-card-glass: rgba(255, 255, 255, 0.1); /* Vidrio oscuro */
+  --bg-card-light: rgba(255, 255, 255, 0.9); /* Blanco humo opaco */
+}
+
+/* Aplicar fondo base a toda la app */
+body {
+  background-color: var(--color-primary-dark);
+  color: var(--color-text-light);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+}

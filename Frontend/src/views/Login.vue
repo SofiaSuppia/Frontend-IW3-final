@@ -60,10 +60,6 @@
           <p v-if="error" class="error-msg">{{ error }}</p>
 
           <Button label="INGRESAR AHORA" class="login-btn" @click="handleLogin" />
-
-          <div class="footer-links">
-            <span @click="$router.push('/')">Volver al inicio</span>
-          </div>
         </div>
       </div>
 
@@ -74,22 +70,27 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import authService from '../services/authService'; // <--- 1. IMPORTAR ESTO
+import authService from '../services/authService'; 
 
 const router = useRouter();
 const username = ref('');
 const password = ref('');
-const error = ref(''); // <--- 2. AGREGAR ESTA VARIABLE
+const error = ref(''); 
 
-// 3. REEMPLAZAR LA FUNCIÓN handleLogin POR ESTA:
 const handleLogin = async () => {
-  error.value = ''; // Limpiar errores previos
+  error.value = ''; 
   try {
+    console.log("Intentando loguear con:", username.value); // Debug
+    
+    // 1. Llamada al Backend
     await authService.login(username.value, password.value);
-    // Si el login es exitoso, redirigir al inicio
-    router.push('/'); 
+    
+    console.log("Login exitoso, redirigiendo..."); // Debug
+    
+    // 2. Redirección
+    router.push('/home'); 
   } catch (err) {
-    console.error(err);
+    console.error("Error de login:", err); // Ver esto en consola (F12)
     error.value = 'Usuario o contraseña incorrectos';
   }
 };
