@@ -1,10 +1,8 @@
 <template>
   <div class="dashboard-layout">
     
-    <!-- COMPONENTE SIDEBAR -->
     <Sidebar activePage="users" />
 
-    <!-- CONTENIDO PRINCIPAL -->
     <main class="main-content">
       <div class="content-container">
         
@@ -25,48 +23,68 @@
         <div class="filters-panel glass-panel">
           <div class="filter-group">
             <label>Rol</label>
-            <Dropdown v-model="filters.role" :options="roleOptions" placeholder="Todos" class="custom-dropdown" showClear />
+            <Dropdown v-model="filters.role" :options="Object.keys(ROLE_CONFIG)" placeholder="Todos" class="custom-dropdown" showClear />
           </div>
           <div class="filter-group">
             <label>Tipo</label>
-            <Dropdown v-model="filters.type" :options="typeOptions" placeholder="Todos" class="custom-dropdown" showClear />
+            <Dropdown v-model="filters.type" :options="Object.keys(TYPE_CONFIG)" placeholder="Todos" class="custom-dropdown" showClear />
           </div>
           <div class="filter-group">
             <label>Estado</label>
-            <Dropdown v-model="filters.status" :options="statusOptions" placeholder="Todos" class="custom-dropdown" showClear />
+            <Dropdown v-model="filters.status" :options="Object.keys(STATUS_CONFIG)" placeholder="Todos" class="custom-dropdown" showClear />
           </div>
         </div>
 
         <!-- TABLA DE USUARIOS -->
         <div class="table-wrapper">
           <DataTable :value="filteredUsers" :paginator="true" :rows="6" class="users-table" responsiveLayout="scroll">
+            
             <Column field="id" header="ID" style="width: 50px"></Column>
+            
             <Column field="username" header="Usuario">
               <template #body="slotProps">
                 <div class="user-cell">
-                  <div class="user-avatar-small">{{ slotProps.data.username.charAt(0).toUpperCase() }}</div>
+                  <div class="user-avatar-small" :style="{ backgroundColor: getRoleConfig(slotProps.data.role).color }">
+                    {{ slotProps.data.username.charAt(0).toUpperCase() }}
+                  </div>
                   <span>{{ slotProps.data.username }}</span>
                 </div>
               </template>
             </Column>
+            
             <Column field="email" header="Email"></Column>
+            
             <Column field="role" header="Rol">
               <template #body="slotProps">
-                <Tag :value="slotProps.data.role" :severity="getRoleSeverity(slotProps.data.role)" />
+                <Tag 
+                  :value="slotProps.data.role" 
+                  :severity="getRoleConfig(slotProps.data.role).severity"
+                  :icon="getRoleConfig(slotProps.data.role).icon"
+                />
               </template>
             </Column>
+            
+            <!-- MEJORA: Usamos Tag en lugar de span manual -->
             <Column field="type" header="Tipo">
               <template #body="slotProps">
-                <span :class="['type-badge', slotProps.data.type === 'Interno' ? 'type-internal' : 'type-external']">
-                  {{ slotProps.data.type }}
-                </span>
+                <Tag 
+                  :value="slotProps.data.type" 
+                  :severity="getTypeConfig(slotProps.data.type).severity"
+                  style="background: transparent; border: 1px solid currentColor;"
+                />
               </template>
             </Column>
+            
             <Column field="status" header="Estado">
               <template #body="slotProps">
-                <Tag :value="slotProps.data.status" :severity="getStatusSeverity(slotProps.data.status)" rounded />
+                <Tag 
+                  :value="slotProps.data.status" 
+                  :severity="getStatusConfig(slotProps.data.status).severity" 
+                  rounded 
+                />
               </template>
             </Column>
+            
             <Column header="Acciones" style="width: 100px; text-align: center">
               <template #body>
                 <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-rounded action-btn" />
@@ -78,7 +96,7 @@
       </div>
     </main>
 
-    <!-- DIALOGO AGREGAR USUARIO (Mantenemos el diseño oscuro) -->
+    <!-- DIALOGO AGREGAR USUARIO -->
     <Dialog 
       v-model:visible="showAddUserDialog" 
       modal 
@@ -108,7 +126,7 @@
         </div>
         <div class="field mb-4 input-wrapper">
           <label for="role" class="input-label">Roles</label>
-          <Dropdown id="role" v-model="newUser.role" :options="roleOptions" placeholder="Seleccionar" class="w-full custom-dropdown-form" />
+          <Dropdown id="role" v-model="newUser.role" :options="Object.keys(ROLE_CONFIG)" placeholder="Seleccionar" class="w-full custom-dropdown-form" />
         </div>
       </div>
       <template #footer>
@@ -125,7 +143,6 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-// Importamos Sidebar
 import Sidebar from '../components/Sidebar.vue';
 
 // PrimeVue Components
@@ -141,10 +158,34 @@ import Password from 'primevue/password';
 
 const router = useRouter();
 
-// --- ESTADO DEL DIALOGO ---
+// --- 1. CONFIGURACIÓN CENTRALIZADA (Best Practice) ---
+const ROLE_CONFIG = {
+  'Admin':    { severity: 'danger',  icon: 'pi pi-shield', color: '#E94560' },
+  'Operador': { severity: 'info',    icon: 'pi pi-cog',    color: '#64b5f6' },
+  'Cliente':  { severity: 'warning', icon: 'pi pi-user',   color: '#F9A826' }
+};
+
+const TYPE_CONFIG = {
+  'Interno': { severity: 'info' },
+  'Externo': { severity: 'secondary' }
+};
+
+const STATUS_CONFIG = {
+  'Habilitada':    { severity: 'success' },
+  'Deshabilitada': { severity: 'danger' }
+};
+
+// Helpers seguros
+const getRoleConfig = (role) => ROLE_CONFIG[role] || { severity: 'secondary', color: '#ccc' };
+const getTypeConfig = (type) => TYPE_CONFIG[type] || { severity: 'secondary' };
+const getStatusConfig = (status) => STATUS_CONFIG[status] || { severity: 'secondary' };
+
+// --- ESTADO ---
 const showAddUserDialog = ref(false);
 const newUser = ref({ isInternal: true, email: '', username: '', password: '', role: null });
+const filters = ref({ role: null, type: null, status: null });
 
+// --- LÓGICA ---
 const openNewUserDialog = () => {
   newUser.value = { isInternal: true, email: '', username: '', password: '', role: null };
   showAddUserDialog.value = true;
@@ -154,12 +195,6 @@ const saveUser = () => {
   console.log("Guardando usuario:", newUser.value);
   showAddUserDialog.value = false;
 };
-
-// --- ESTADO DE FILTROS ---
-const filters = ref({ role: null, type: null, status: null });
-const roleOptions = ['Admin', 'Operador', 'Cliente'];
-const typeOptions = ['Interno', 'Externo'];
-const statusOptions = ['Habilitada', 'Deshabilitada'];
 
 // --- DATOS SIMULADOS ---
 const users = ref([
@@ -172,7 +207,6 @@ const users = ref([
   { id: 44, username: 'super', email: 'super@mail.com', role: 'Admin', type: 'Interno', status: 'Habilitada' },
 ]);
 
-// --- LÓGICA DE FILTRADO ---
 const filteredUsers = computed(() => {
   return users.value.filter(user => {
     const matchRole = !filters.value.role || user.role === filters.value.role;
@@ -181,20 +215,6 @@ const filteredUsers = computed(() => {
     return matchRole && matchType && matchStatus;
   });
 });
-
-// --- HELPERS VISUALES ---
-const getRoleSeverity = (role) => {
-  switch (role) {
-    case 'Admin': return 'danger';
-    case 'Operador': return 'info';
-    case 'Cliente': return 'warning';
-    default: return 'secondary';
-  }
-};
-
-const getStatusSeverity = (status) => {
-  return status === 'Habilitada' ? 'success' : 'danger';
-};
 </script>
 
 <style scoped>
@@ -204,8 +224,6 @@ const getStatusSeverity = (status) => {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #16213E;
 }
-
-/* NOTA: Se eliminaron los estilos de .sidebar porque ahora vienen del componente */
 
 /* --- MAIN CONTENT --- */
 .main-content {
@@ -241,33 +259,39 @@ const getStatusSeverity = (status) => {
 :deep(.custom-dropdown) { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
 :deep(.custom-dropdown .p-dropdown-label) { color: #F1F6F9; }
 
-/* --- TABLE STYLES --- */
+/* --- TABLE STYLES (CORREGIDO FONDO BLANCO) --- */
 .table-wrapper { background-color: #0F3460; border-radius: 12px; padding: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-:deep(.users-table .p-datatable-tbody > tr) { background: transparent !important; color: #F1F6F9 !important; }
-:deep(.users-table .p-datatable-header), :deep(.users-table .p-datatable-thead > tr > th), :deep(.users-table .p-datatable-tbody > tr > td), :deep(.users-table .p-datatable-footer), :deep(.users-table .p-paginator) {
+
+:deep(.users-table .p-datatable-header), 
+:deep(.users-table .p-datatable-thead > tr > th), 
+:deep(.users-table .p-datatable-tbody > tr), /* IMPORTANTE: Transparencia en filas */
+:deep(.users-table .p-datatable-tbody > tr > td), 
+:deep(.users-table .p-datatable-footer), 
+:deep(.users-table .p-paginator) {
   background: transparent !important; color: #F1F6F9 !important; border-color: rgba(255, 255, 255, 0.05) !important;
 }
+
 :deep(.users-table .p-datatable-thead > tr > th) { color: #aebbc7 !important; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; }
 :deep(.users-table .p-datatable-tbody > tr:hover) { background: rgba(255, 255, 255, 0.05) !important; }
 
 .user-cell { display: flex; align-items: center; gap: 10px; }
-.user-avatar-small { width: 30px; height: 30px; background: #E94560; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; }
-.type-badge { font-size: 0.85rem; font-weight: 600; }
-.type-internal { color: #64b5f6; }
-.type-external { color: #aebbc7; }
+.user-avatar-small { width: 30px; height: 30px; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; }
 .action-btn { color: #aebbc7 !important; }
 .action-btn:hover { color: #F1F6F9 !important; background: rgba(255,255,255,0.1) !important; }
 
 /* --- ESTILOS DEL DIALOGO (MODAL) --- */
 :deep(.custom-dialog-dark) {
-  background: #100c26 !important;
+  background-color: #0F3460 !important; /* Azul oscuro (mismo de la sidebar) */
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+  color: #F1F6F9 !important; /* Texto blanco */
 }
 :deep(.custom-dialog-dark .p-dialog-header),
 :deep(.custom-dialog-dark .p-dialog-content),
 :deep(.custom-dialog-dark .p-dialog-footer) {
-  background: transparent !important; border: none !important; color: #e0e0e0 !important;
+  background: #0F3460 !important; /* O transparent */
+  color: #F1F6F9 !important;
+  border: none !important;
 }
 :deep(.custom-dialog-dark .p-dialog-header) { padding: 1.5rem 1.5rem 0.5rem 1.5rem; }
 :deep(.custom-dialog-dark .p-dialog-title) { font-weight: 600; font-size: 1.25rem; }
