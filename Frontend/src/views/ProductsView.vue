@@ -4,12 +4,6 @@
 
     <main class="main-content">
       <div class="content-container">
-        
-        <!-- Breadcrumb -->
-        <nav class="breadcrumb mb-2">
-          <span class="back-arrow" @click="router.push('/home')">←</span> 
-          <span class="breadcrumb-text">Admin / Productos</span>
-        </nav>
 
         <!-- Header -->
         <header class="page-header">
@@ -35,7 +29,7 @@
             :rows="10" 
             class="products-table"
             :emptyMessage="EMPTY_TABLE_MESSAGE"
-            paginatorTemplate="FirstPageLink PrevPageLink NextPageLink LastPageLink"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
           >
             <Column field="id" header="ID" :sortable="true" style="width: 80px" />
             
@@ -201,7 +195,7 @@ const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFix
 <style scoped>
 /* Estilos simplificados - mantener solo los esenciales */
 .dashboard-layout { display: flex; height: 100vh; background-color: #16213E; }
-.main-content { flex: 1; padding: 2rem; overflow-y: auto; background: linear-gradient(rgba(22, 33, 62, 0.6), rgba(22, 33, 62, 0.75)), url('/assets/images/fondoCompleto.png') no-repeat center center; background-size: cover; }
+.main-content { flex: 1; padding: 2rem; overflow-y: auto; background: linear-gradient(rgba(22, 33, 62, 0.6), rgba(22, 33, 62, 0.75)), url('/assets/images/fondoCompleto.png') no-repeat center center; background-size: cover; background-attachment: fixed; }
 .content-container { max-width: 1400px; margin: 0 auto; }
 .breadcrumb { color: #aebbc7; font-size: 0.9rem; display: flex; gap: 10px; margin-bottom: 1rem; }
 .back-arrow { cursor: pointer; font-size: 1.2rem; transition: color 0.2s; }
@@ -210,7 +204,20 @@ const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFix
 .page-title { color: #F1F6F9; font-size: 2rem; margin: 0; font-weight: 600; }
 .add-btn { background-color: #4361ee !important; border: none !important; font-weight: 700 !important; padding: 0.7rem 1.5rem !important; border-radius: 4px !important; }
 .add-btn:hover { background-color: #3a56d4 !important; }
-.table-wrapper { background-color: #0F3460; border-radius: 8px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); position: relative; }
+
+/* Contenedor de tabla con efecto glass */
+.table-wrapper { 
+  background: rgba(255, 255, 255, 0.05) !important; /* ← Fondo semi-transparente */
+  backdrop-filter: blur(10px); /* ← Efecto blur */
+  border: 1px solid rgba(255, 255, 255, 0.1); 
+  border-radius: 15px; 
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); 
+  position: relative; 
+  opacity: 0; 
+  animation: fadeIn 0.6s forwards 0.2s;
+}
+
 .loading-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(22, 33, 62, 0.9); display: flex; align-items: center; justify-content: center; z-index: 9999; border-radius: 8px; }
 .loading-overlay i { font-size: 2rem; color: #F9A826; }
 .descripcion-text { color: #aebbc7; font-size: 0.85rem; }
@@ -218,39 +225,136 @@ const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFix
 .action-btn:hover { background: rgba(255, 255, 255, 0.1) !important; }
 .mb-2 { margin-bottom: 0.5rem; }
 
-/* DataTable */
-:deep(.products-table .p-datatable-thead > tr > th) { background-color: #0F3460 !important; color: #aebbc7 !important; font-weight: 600; font-size: 0.85rem; border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important; padding: 1.5rem 1rem; }
-:deep(.products-table .p-datatable-tbody > tr) { background: #0F3460 !important; color: #F1F6F9 !important; }
-:deep(.products-table .p-datatable-tbody > tr > td) { border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; padding: 1.5rem 1rem; }
-:deep(.products-table .p-datatable-tbody > tr:hover) { background: rgba(255, 255, 255, 0.05) !important; }
+/* DataTable - Fondo transparente */
+:deep(.products-table) {
+  background: transparent !important;
+}
 
-/* Paginador simplificado */
-:deep(.p-paginator) { background: #0F3460 !important; border-top: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem; }
-:deep(.p-paginator .p-paginator-element) { color: #aebbc7 !important; min-width: 2.5rem; height: 2.5rem; border-radius: 4px; }
-:deep(.p-paginator .p-paginator-element:hover) { background: rgba(255, 255, 255, 0.1) !important; color: #fff !important; }
-:deep(.p-paginator .p-paginator-element.p-highlight) { background: #4361ee !important; color: #fff !important; }
+:deep(.products-table .p-datatable-wrapper) {
+  background: transparent !important;
+}
+
+:deep(.products-table .p-datatable-thead > tr > th) { 
+  background: transparent !important; /* ← Fondo transparente */
+  color: #aebbc7 !important; 
+  font-weight: 600; 
+  font-size: 0.85rem; 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; 
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  padding: 1.5rem 1rem; 
+}
+
+:deep(.products-table .p-datatable-tbody > tr) { 
+  background: transparent !important; /* ← Fondo transparente */
+  color: #F1F6F9 !important; 
+  transition: background 0.2s ease;
+}
+
+:deep(.products-table .p-datatable-tbody > tr > td) { 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; 
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  padding: 1.5rem 1rem; 
+  color: #F1F6F9 !important;
+}
+
+:deep(.products-table .p-datatable-tbody > tr:hover) { 
+  background: rgba(255, 255, 255, 0.1) !important; /* ← Hover sutil */
+}
+
+/* Paginador con fondo transparente */
+:deep(.p-paginator) { 
+  background: transparent !important; /* ← Fondo transparente */
+  border-top: 1px solid rgba(255, 255, 255, 0.1); 
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  padding: 1rem; 
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Botones de navegación (<<, <, >, >>) */
+:deep(.p-paginator .p-paginator-first),
+:deep(.p-paginator .p-paginator-prev),
+:deep(.p-paginator .p-paginator-next),
+:deep(.p-paginator .p-paginator-last) { 
+  color: #aebbc7 !important; 
+  min-width: 2.5rem; 
+  height: 2.5rem; 
+  border-radius: 4px;
+  background: transparent !important;
+  border: none !important;
+}
+
+:deep(.p-paginator .p-paginator-first:hover),
+:deep(.p-paginator .p-paginator-prev:hover),
+:deep(.p-paginator .p-paginator-next:hover),
+:deep(.p-paginator .p-paginator-last:hover) { 
+  background: rgba(255, 255, 255, 0.1) !important; 
+  color: #fff !important; 
+}
+
+/* Números de página */
+:deep(.p-paginator .p-paginator-pages) {
+  display: flex;
+  gap: 0.25rem;
+}
+
+:deep(.p-paginator .p-paginator-page) { 
+  color: #aebbc7 !important; 
+  min-width: 2.5rem; 
+  height: 2.5rem; 
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: none !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+:deep(.p-paginator .p-paginator-page:hover) { 
+  background: rgba(255, 255, 255, 0.1) !important; 
+  color: #fff !important; 
+}
+
+/* Página activa */
+:deep(.p-paginator .p-paginator-page.p-highlight) { 
+  background: #ffffff !important;
+  color: #0F3460 !important;
+  font-weight: 700;
+}
+
+/* Deshabilitar botones cuando no se pueden usar */
+:deep(.p-paginator .p-disabled) {
+  opacity: 0.4;
+  cursor: not-allowed !important;
+}
 
 /* Diálogos */
 :deep(.p-dialog.custom-dialog-dark) { 
-  background-color: #0F3460 !important; /* ← CAMBIAR AQUÍ */
+  background-color: #0F3460 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important; 
   border-radius: 8px !important; 
 }
 
 :deep(.p-dialog.custom-dialog-dark .p-dialog-header) { 
-  background-color: #0F3460 !important; /* ← CAMBIAR AQUÍ */
+  background-color: #0F3460 !important;
   color: #F1F6F9 !important; 
   padding: 1.5rem !important; 
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; 
 }
 
 :deep(.p-dialog.custom-dialog-dark .p-dialog-content) { 
-  background-color: #0F3460 !important; /* ← CAMBIAR AQUÍ - ESTE ES EL IMPORTANTE */
+  background-color: #0F3460 !important;
   padding: 1.5rem !important; 
 }
 
 :deep(.p-dialog.custom-dialog-dark .p-dialog-footer) { 
-  background-color: #0F3460 !important; /* ← CAMBIAR AQUÍ */
+  background-color: #0F3460 !important;
   border-top: 1px solid rgba(255, 255, 255, 0.1) !important; 
   padding: 1rem 1.5rem !important; 
 }
@@ -259,6 +363,11 @@ const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFix
 .cancel-btn:hover { color: #fff !important; background: rgba(255, 255, 255, 0.05) !important; }
 .save-btn { color: #7e73f0 !important; font-weight: 700; }
 .save-btn:hover { background: rgba(126, 115, 240, 0.15) !important; }
+
+/* Animación de entrada */
+@keyframes fadeIn { 
+  to { opacity: 1; } 
+}
 </style>
 
 <!-- ESTILOS GLOBALES PARA EL MENÚ (sin scoped) -->
