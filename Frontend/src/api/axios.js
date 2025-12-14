@@ -1,23 +1,38 @@
 import axios from 'axios';
 
-// Aquí definimos la dirección base de tu backend
 const api = axios.create({
-    // ANTES DECÍA: 'http://localhost:8080/api/v1'
-    // AHORA DEBE DECIR:
     baseURL: '/api/v1', 
 });
 
-// Esto es un "Interceptor":
-// Cada vez que hagas una petición, revisa si tienes un token guardado.
-// Si lo tienes, lo agrega automáticamente a la cabecera para que el backend sepa quién eres.
-api.interceptors.request.use(config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+// Interceptor para agregar el token a TODAS las peticiones
+api.interceptors.request.use(
+    config => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+            console.log('Token enviado:', token.substring(0, 20) + '...'); // DEBUG
+        } else {
+            console.warn('No hay token disponible'); // DEBUG
+        }
+        return config;
+    }, 
+    error => {
+        return Promise.reject(error);
     }
-    return config;
-}, error => {
-    return Promise.reject(error);
-});
+);
+
+// Interceptor para manejar respuestas de error
+api.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response?.status === 403) {
+            console.error('Error 403: Token inválido o expirado');
+            // Opcional: redirigir al login
+            // localStorage.removeItem('token');
+            // window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default api;
