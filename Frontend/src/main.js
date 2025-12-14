@@ -6,13 +6,13 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
+// PrimeVue
 import PrimeVue from 'primevue/config'
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext' 
-import Password from 'primevue/password'   
+import ToastService from 'primevue/toastservice'
+import Tooltip from 'primevue/tooltip'
 
-
-import 'primevue/resources/themes/lara-light-indigo/theme.css'
+// Estilos PrimeVue
+import 'primevue/resources/themes/lara-dark-blue/theme.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
@@ -22,9 +22,7 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(PrimeVue)
-
-app.component('Button', Button)
-app.component('InputText', InputText) 
-app.component('Password', Password) 
+app.use(ToastService)
+app.directive('tooltip', Tooltip)
 
 app.mount('#app')
