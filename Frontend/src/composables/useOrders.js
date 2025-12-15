@@ -25,6 +25,28 @@ export function useOrders() {
   });
 
   /**
+   * Obtiene las N órdenes más recientes
+   * @param {number} limit - Cantidad de órdenes a retornar
+   */
+  const recentOrders = computed(() => {
+    return [...orders.value]
+      .sort((a, b) => new Date(b.fechaRecepcion) - new Date(a.fechaRecepcion))
+      .slice(0, 6);
+  });
+
+  /**
+   * Estadísticas de órdenes por estado
+   */
+  const orderStats = computed(() => {
+    const stats = orders.value.reduce((acc, order) => {
+      acc[order.estado] = (acc[order.estado] || 0) + 1;
+      return acc;
+    }, {});
+    
+    return stats;
+  });
+
+  /**
    * Maneja errores de API y muestra mensajes apropiados
    * @param {Error} error - Error capturado
    * @param {string} defaultMessage - Mensaje por defecto
@@ -122,7 +144,11 @@ export function useOrders() {
     orders,
     loading,
     activeFilter,
+    
+    // Computed
     filteredOrders,
+    recentOrders,
+    orderStats,
     
     // Métodos
     loadOrders,

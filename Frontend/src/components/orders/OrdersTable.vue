@@ -137,11 +137,13 @@ const getTagStyle = (estado) => {
 </script>
 
 <style scoped>
-/* Contenedor de tabla */
+/* Contenedor de tabla - Fondo transparente con efecto glass */
 .table-wrapper {
-  background-color: #0F3460;
-  border-radius: 12px; 
-  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05); 
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px; 
+  padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   position: relative;
 }
@@ -158,7 +160,7 @@ const getTagStyle = (estado) => {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  border-radius: 12px;
+  border-radius: 15px;
 }
 
 .loading-overlay i {
@@ -198,7 +200,7 @@ const getTagStyle = (estado) => {
 :deep(.orders-table .p-paginator) {
   background: transparent !important; 
   color: #F1F6F9 !important; 
-  border-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 :deep(.orders-table .p-datatable-thead > tr > th) {
@@ -210,7 +212,7 @@ const getTagStyle = (estado) => {
 }
 
 :deep(.orders-table .p-datatable-tbody > tr:hover) { 
-  background: rgba(255, 255, 255, 0.05) !important; 
+  background: rgba(255, 255, 255, 0.1) !important; 
 }
 
 :deep(.p-button-rounded) {
