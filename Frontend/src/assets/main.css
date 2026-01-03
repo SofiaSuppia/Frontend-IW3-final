@@ -45,3 +45,181 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
 }
+
+/* ESTILOS PARA SEPARAR LAS FILAS DE LA TABLA */
+
+/* 1. Aumentar el espacio interno (padding) de cada celda */
+.p-datatable .p-datatable-tbody > tr > td {
+    padding: 1.5rem 1rem !important; /* 1.5rem arriba/abajo, 1rem izquierda/derecha */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; /* Línea separadora sutil */
+}
+
+/* 2. Opcional: Darle un efecto de separación visual al pasar el mouse */
+.p-datatable .p-datatable-tbody > tr:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* 3. Separar un poco el encabezado del cuerpo */
+.p-datatable .p-datatable-thead > tr > th {
+    padding: 1.2rem 1rem !important;
+    background-color: rgba(22, 33, 62, 0.95) !important; /* Fondo oscuro para el encabezado */
+}
+
+/* --- ESTILOS DE PAGINACIÓN: RECUADROS ANGOSTOS, NÚMEROS GRANDES --- */
+
+/* 1. Contenedor principal */
+.p-paginator {
+    background: transparent !important;
+    border: none !important;
+    padding: 2rem 0 !important;
+    justify-content: center !important;
+    gap: 1rem !important; /* Separación general */
+}
+
+/* 2. Contenedor de los números (para separarlos entre sí) */
+.p-paginator .p-paginator-pages {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.8rem !important; /* Separación entre los números */
+}
+
+/* 3. Estilo base para los botones (Recuadro angosto, Letra grande) */
+.p-paginator .p-paginator-element {
+    width: 2.8rem !important;       /* ANGOSTO: Tamaño contenido */
+    height: 2.8rem !important;      /* ANGOSTO */
+    min-width: 2.8rem !important;
+    border-radius: 8px !important;
+    
+    font-size: 1.4rem !important;   /* GRANDE: El número se ve grande dentro del cuadro */
+    font-weight: 700 !important;
+    
+    color: #F1F6F9 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    transition: all 0.2s ease !important;
+    
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important; /* Sin relleno extra para que el número ocupe espacio */
+}
+
+/* 4. Hover */
+.p-paginator .p-paginator-element:not(.p-highlight):not(.p-disabled):hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* 5. PÁGINA ACTIVA */
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background-color: #64b5f6 !important;
+    color: #16213E !important;
+    font-weight: 900 !important;
+    font-size: 1.5rem !important; /* El activo un poco más grande aún */
+    border-color: #64b5f6 !important;
+    box-shadow: 0 0 15px rgba(100, 181, 246, 0.5) !important;
+    transform: scale(1.1);
+    z-index: 2;
+}
+
+/* 6. Iconos de flechas grandes */
+.p-paginator .p-paginator-icon {
+    font-size: 1.1rem !important; /* Flechas visibles */
+    font-weight: bold !important;
+}
+
+/* 7. Deshabilitados */
+.p-paginator .p-paginator-element.p-disabled {
+    opacity: 0.2 !important;
+    cursor: default !important;
+    border-color: transparent !important;
+}
+
+/* --- ESTILOS UNIFICADOS PARA MENÚS, FILTROS Y DROPDOWNS --- */
+
+/* 1. El contenedor principal (La caja azul flotante) */
+/* Agregamos .p-dropdown-panel y .p-multiselect-panel para que afecte a los filtros */
+.p-menu, 
+.p-tieredmenu, 
+.p-contextmenu,
+.p-dropdown-panel, 
+.p-multiselect-panel {
+    background: #16213E !important; /* Fondo Azul Oscuro */
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    min-width: 200px !important;
+
+    /* TUS ESPACIOS PERSONALIZADOS: */
+    padding-top: 1.2rem !important;
+    padding-bottom: 1.2rem !important;
+    padding-left: 0.8rem !important;
+    padding-right: 0.8rem !important;
+}
+
+/* 2. Cada opción individual (Items de lista) */
+.p-menu .p-menuitem-link, 
+.p-tieredmenu .p-menuitem-link,
+.p-contextmenu .p-menuitem-link,
+.p-dropdown-item,          /* Clase para items de Dropdown */
+.p-multiselect-item {      /* Clase para items de MultiSelect (Filtros) */
+    
+    /* ESPACIO ENTRE OPCIONES: */
+    margin-bottom: 0.8rem !important;
+    
+    border-radius: 8px !important;
+    padding: 0.8rem 1rem !important;
+    color: #F1F6F9 !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease;
+    display: flex !important;
+    align-items: center !important;
+    background: transparent !important; /* Asegurar fondo limpio */
+}
+
+/* Quitar margen al último elemento */
+.p-menu .p-menuitem:last-child .p-menuitem-link,
+.p-dropdown-item:last-child,
+.p-multiselect-item:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* 3. Efecto Hover (Pasar el mouse) */
+.p-menu .p-menuitem-link:hover,
+.p-tieredmenu .p-menuitem-link:hover,
+.p-contextmenu .p-menuitem-link:hover,
+.p-dropdown-item:not(.p-highlight):not(.p-disabled):hover,
+.p-multiselect-item:not(.p-highlight):not(.p-disabled):hover {
+    background: rgba(100, 181, 246, 0.15) !important;
+    color: #ffffff !important;
+    transform: translateX(5px);
+}
+
+/* 4. Item Seleccionado (Específico para filtros/dropdowns) */
+.p-dropdown-item.p-highlight,
+.p-multiselect-item.p-highlight {
+    background: rgba(100, 181, 246, 0.3) !important;
+    color: #ffffff !important;
+}
+
+/* 5. Iconos */
+.p-menu .p-menuitem-icon,
+.p-tieredmenu .p-menuitem-icon,
+.p-contextmenu .p-menuitem-icon {
+    color: #64b5f6 !important;
+    margin-right: 1rem !important;
+    font-size: 1.2rem !important;
+}
+
+/* 6. Header de los filtros (La barrita de búsqueda o cerrar) */
+.p-dropdown-header,
+.p-multiselect-header {
+    background: #16213E !important;
+    color: #F1F6F9 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 0.8rem !important;
+    border-radius: 12px 12px 0 0 !important;
+}
+

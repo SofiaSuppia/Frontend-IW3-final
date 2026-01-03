@@ -1,10 +1,12 @@
 import api from '../api/axios';
 
-export default {
+export const orderService = {
     // Obtener todas las órdenes
     async getAllOrders() {
         try {
-            const response = await api.get('/ordenes');
+            // Agregamos un tamaño de página grande para asegurar que traiga todo
+            // Si tu backend usa Spring Boot estándar, esto suele funcionar.
+            const response = await api.get('/ordenes?size=1000&page=0');
             return response.data;
         } catch (error) {
             console.error("Error al obtener órdenes:", error);

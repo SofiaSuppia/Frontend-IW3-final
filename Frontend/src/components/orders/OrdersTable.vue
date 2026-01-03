@@ -15,7 +15,7 @@
       class="orders-table"
       responsiveLayout="scroll"
       emptyMessage="No hay órdenes registradas"
-      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
+      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
       currentPageReportTemplate="{first} - {last} de {totalRecords}"
     >
       

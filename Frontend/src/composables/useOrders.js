@@ -1,7 +1,8 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'primevue/usetoast';
-import orderService from '../services/orderService';
+
+import { orderService } from '../services/orderService'; 
 
 /**
  * Composable para manejo de órdenes
@@ -83,11 +84,36 @@ export function useOrders() {
   const loadOrders = async () => {
     loading.value = true;
     try {
-      const data = await orderService.getAllOrders();
+      // El servicio devuelve el array directo
+      const response = await orderService.getAllOrders();
+      
+      console.log("Datos recibidos:", response);
+
+      let data = [];
+
+      // CASO 1: El backend devuelve el array directamente (Tu caso actual)
+      if (Array.isArray(response)) {
+          data = response;
+      } 
+      // CASO 2: El backend devuelve un objeto Axios con .data (Caso antiguo)
+      else if (response && Array.isArray(response.data)) {
+          data = response.data;
+      }
+      // CASO 3: Paginación de Spring Boot dentro de .content
+      else if (response && response.content && Array.isArray(response.content)) {
+          data = response.content;
+      }
+      // CASO 4: Paginación dentro de .data.content
+      else if (response && response.data && response.data.content) {
+          data = response.data.content;
+      }
+
+      console.log(`Total procesado: ${data.length}`);
       orders.value = data;
-      console.log('Órdenes cargadas:', data.length);
+      
     } catch (error) {
-      handleApiError(error, 'Error al cargar órdenes');
+      console.error(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las órdenes', life: 3000 });
     } finally {
       loading.value = false;
     }

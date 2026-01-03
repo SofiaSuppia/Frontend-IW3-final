@@ -370,106 +370,111 @@ const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFix
 }
 </style>
 
-<!-- ESTILOS GLOBALES PARA EL MENÚ (sin scoped) -->
+<!-- ESTILOS GLOBALES CORREGIDOS (Alta Prioridad) -->
 <style>
-/* Menú contextual - FONDO #0F3460 */
-.p-menu.custom-menu,
-.p-menu.p-menu-overlay.custom-menu { 
+/* 1. Contenedor del Menú y Filtros (La caja azul) */
+body .p-menu.custom-menu,
+body .p-dropdown-panel, 
+body .p-multiselect-panel { 
   background-color: #0F3460 !important; 
-  border: 0 none !important; 
+  border: 1px solid rgba(255, 255, 255, 0.15) !important; 
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+  min-width: 240px !important; /* Un poco más ancho */
+
+  /* ESPACIOS DEL RECUADRO (Padding) */
+  padding-top: 1rem !important;    /* Más espacio arriba */
+  padding-bottom: 1rem !important; /* Más espacio abajo */
+  padding-left: 1rem !important;   /* Espacio a la izquierda */
+  padding-right: 1rem !important;  /* Espacio a la derecha */
+}
+
+/* 2. Espacio entre cada opción (Editar vs Eliminar) */
+body .custom-menu .p-menuitem,
+body .p-dropdown-item,
+body .p-multiselect-item {
+  margin-bottom: 10rem !important; /* Separación clara entre renglones */
+}
+
+/* Quitar margen al último elemento para que no quede espacio extra abajo */
+body .custom-menu .p-menuitem:last-child,
+body .p-dropdown-item:last-child,
+body .p-multiselect-item:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 3. Estilo interno de cada botón/enlace */
+body .custom-menu .p-menuitem-link,
+body .p-dropdown-item,
+body .p-multiselect-item {
+  padding: 10px 15px !important;
   border-radius: 8px !important;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
-  padding: 0.5rem 0 !important;
-  min-width: 180px;
-}
-
-/* Items del menú */
-.custom-menu .p-menuitem {
-  margin: 0 !important;
-}
-
-.custom-menu .p-menuitem-link {
-  padding: 12px 16px !important;
-  background: transparent !important;
-  border-radius: 0 !important;
-  color: #ffffff !important; /* ← TEXTO BLANCO */
+  color: #ffffff !important;
   transition: all 0.2s ease;
+  display: flex !important;
+  align-items: center !important;
+  background: transparent !important;
 }
 
-.custom-menu .p-menuitem-link:hover { 
-  background: #0a2540 !important; /* ← AZUL MÁS OSCURO al hover */
+/* Hover (Efecto al pasar el mouse) */
+body .custom-menu .p-menuitem-link:hover,
+body .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover,
+body .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover { 
+  background: rgba(100, 181, 246, 0.15) !important; 
+  transform: translateX(5px); 
 }
 
-.custom-menu .p-menuitem-icon {
-  margin-right: 12px !important;
-  font-size: 1.1rem;
+/* 4. Separación entre ICONO y TEXTO */
+body .custom-menu .p-menuitem-icon {
+  margin-right: 1.5rem !important; /* <--- AQUÍ ESTÁ EL ESPACIO GRANDE QUE PEDISTE */
+  font-size: 1.2rem !important;
   color: #64b5f6 !important;
 }
 
-.custom-menu .p-menuitem-text {
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  color: #ffffff !important; /* ← TEXTO BLANCO */
+/* Texto de la opción */
+body .custom-menu .p-menuitem-text {
+  font-weight: 500 !important;
+  font-size: 1rem !important;
 }
 
-/* Color específico para el icono de eliminar */
-.custom-menu .p-menuitem:last-child .p-menuitem-icon {
+/* Icono de eliminar en rojo */
+body .custom-menu .p-menuitem:last-child .p-menuitem-icon {
   color: #E94560 !important;
 }
 
-/* Efecto focus para accesibilidad */
-.custom-menu .p-menuitem-link:focus {
-  background: #0a2540 !important; /* ← AZUL OSCURO al hacer focus */
-  outline: none;
+/* --- Estilos extra para Filtros (Dropdowns) --- */
+body .p-dropdown-item.p-highlight,
+body .p-multiselect-item.p-highlight {
+  background: rgba(100, 181, 246, 0.3) !important;
+  color: #ffffff !important;
 }
 
-/* Contenedor principal del diálogo */
-.p-dialog.custom-dialog-dark {
+body .p-dropdown-header,
+body .p-multiselect-header {
+  background: #0F3460 !important;
+  color: #F1F6F9 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 1rem !important;
+  border-radius: 12px 12px 0 0 !important;
+  /* Ajuste negativo para compensar el padding del contenedor padre */
+  margin: -1.5rem -1.2rem 1rem -1.2rem !important; 
+}
+
+/* --- DIÁLOGOS --- */
+body .p-dialog.custom_dialog_dark {
   background-color: #0F3460 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px !important;
 }
-
-/* Header del diálogo */
-.p-dialog.custom-dialog-dark .p-dialog-header {
+body .p-dialog.custom_dialog_dark .p-dialog-header,
+body .p-dialog.custom_dialog_dark .p-dialog-content,
+body .p-dialog.custom_dialog_dark .p-dialog-footer {
   background-color: #0F3460 !important;
   color: #F1F6F9 !important;
-  padding: 1.5rem !important;
+}
+body .p-dialog.custom_dialog_dark .p-dialog-header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
-
-/* Título del diálogo */
-.p-dialog.custom-dialog-dark .p-dialog-title {
-  color: #F1F6F9 !important;
-  font-weight: 600;
-}
-
-/* Botón de cerrar (X) */
-.p-dialog.custom-dialog-dark .p-dialog-header-icon {
-  color: #aebbc7 !important;
-}
-
-.p-dialog.custom-dialog-dark .p-dialog-header-icon:hover {
-  color: #fff !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-}
-
-/* Contenido del diálogo - AQUÍ ESTÁ EL PROBLEMA */
-.p-dialog.custom-dialog-dark .p-dialog-content {
-  background-color: #0F3460 !important;
-  padding: 1.5rem !important;
-  color: #F1F6F9 !important;
-}
-
-/* Footer del diálogo */
-.p-dialog.custom-dialog-dark .p-dialog-footer {
-  background-color: #0F3460 !important;
+body .p-dialog.custom_dialog_dark .p-dialog-footer {
   border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-  padding: 1rem 1.5rem !important;
-}
-
-/* Overlay/máscara del diálogo */
-.p-dialog-mask {
-  background-color: rgba(0, 0, 0, 0.6) !important;
 }
 </style>
