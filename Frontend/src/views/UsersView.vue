@@ -24,10 +24,11 @@
           
           <!-- Filtro Rol -->
           <div class="filter-item">
+            <span class="filter-label">Rol</span>
             <Select 
               v-model="filters.role" 
               :options="Object.keys(ROLE_CONFIG)" 
-              placeholder="Filtrar por Rol" 
+              placeholder="Seleccionar" 
               class="w-full custom-select-input" 
               :showClear="true"
               appendTo="body"
@@ -36,10 +37,11 @@
 
           <!-- Filtro Tipo -->
           <div class="filter-item">
+            <span class="filter-label">Tipo</span>
             <Select 
               v-model="filters.type" 
               :options="Object.keys(TYPE_CONFIG)" 
-              placeholder="Filtrar por Tipo" 
+              placeholder="Seleccionar" 
               class="w-full custom-select-input" 
               :showClear="true"
               appendTo="body"
@@ -48,10 +50,11 @@
 
           <!-- Filtro Estado -->
           <div class="filter-item">
+            <span class="filter-label">Estado</span>
             <Select 
               v-model="filters.status" 
               :options="Object.keys(STATUS_CONFIG)" 
-              placeholder="Filtrar por Estado" 
+              placeholder="Seleccionar" 
               class="w-full custom-select-input" 
               :showClear="true"
               appendTo="body"
@@ -552,25 +555,66 @@ const filteredUsers = computed(() => {
 /* --- FILTERS PANEL --- */
 .filters-panel {
   display: flex; gap: 2rem; padding: 1.5rem; margin-bottom: 2rem;
-  background: rgba(255, 255, 255, 0.05); /* ← Fondo semi-transparente */
-  backdrop-filter: blur(10px); /* ← Efecto blur */
+  background: rgba(255, 255, 255, 0.05); 
+  backdrop-filter: blur(10px); 
   border-radius: 12px; 
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  align-items: flex-end; /* Alinea los inputs abajo */
 }
 .filter-item { flex: 1; }
-.filter-item:first-child { margin-right: 1rem; }
 
-:deep(.custom-select-input) { 
-  background: rgba(255,255,255,0.05) !important; 
-  border: 1px solid rgba(255,255,255,0.1) !important; 
-  border-radius: 6px;
-  color: #F1F6F9 !important;
-  padding: 0.75rem 1rem !important;
-  font-size: 0.9rem !important;
+/* ETIQUETA SUPERIOR (Estilo Label de la imagen) */
+.filter-label {
+  display: block;
+  color: #F1F6F9;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  margin-left: 4px;
+  letter-spacing: 0.5px;
 }
-:deep(.custom-select-input .p-dropdown-label) { color: #F1F6F9; }
-:deep(.custom-select-input .p-dropdown-trigger) { color: #aebbc7; }
+
+/* INPUT ESTILO MATERIAL (Fondo Oscuro) */
+:deep(.custom-select-input) { 
+  background-color: #0a2540 !important; /* Fondo Azul Oscuro */
+  border: 1px solid rgba(255, 255, 255, 0.15) !important; /* Borde sutil */
+  border-radius: 10px; 
+  height: 48px; 
+  display: flex;
+  align-items: center;
+  padding-left: 1rem !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+  transition: all 0.3s ease;
+}
+
+/* Texto dentro del select (Ahora debe ser claro) */
+:deep(.custom-select-input .p-select-label) { 
+  color: #F1F6F9 !important; /* Texto Blanco */
+  font-weight: 500;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* Placeholder (Gris azulado claro) */
+:deep(.custom-select-input .p-select-label.p-placeholder) {
+  color: #aebbc7 !important;
+}
+
+/* Icono de la flecha (Gris claro) */
+:deep(.custom-select-input .p-select-dropdown) { 
+  color: #aebbc7 !important; 
+  width: 3rem;
+}
+
+/* Efecto Focus */
+:deep(.custom-select-input:focus),
+:deep(.custom-select-input.p-focus) {
+  border-color: #4361ee !important;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1) !important;
+}
 
 /* --- TABLE WRAPPER CON EFECTO GLASS --- */
 .table-wrapper { 
@@ -772,158 +816,108 @@ const filteredUsers = computed(() => {
 
 <!-- ESTILOS GLOBALES PARA EL MENÚ Y DROPDOWNS (sin scoped) -->
 <style>
-/* Menú contextual - FONDO #0F3460 */
-.p-menu.custom-menu,
-.p-menu.p-menu-overlay.custom-menu { 
-  background-color: #0F3460 !important; 
-  border: 0 none !important; 
+/* ===================================
+   DROPDOWNS Y SELECTS - ESTILO OSCURO (TEMA DE LA PÁGINA)
+   =================================== */
+
+/* 1. El contenedor flotante (Panel/Overlay) */
+.p-dropdown-panel,
+.p-select-panel,
+.p-select-overlay {
+  background-color: #0F3460 !important; /* Fondo Azul Oscuro */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important; /* Borde sutil */
   border-radius: 8px !important;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
-  padding: 0.5rem 0 !important;
-  min-width: 180px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+  z-index: 9999 !important;
 }
 
-/* Items del menú */
-.custom-menu .p-menuitem {
+/* 2. La lista contenedora (ul) */
+.p-dropdown-items,
+.p-select-items,
+.p-select-list {
+  background-color: #0F3460 !important;
+  padding: 0 !important;
+}
+
+/* 3. Los items individuales (li/option) */
+.p-dropdown-item,
+.p-select-item,
+.p-select-option {
+  background: transparent !important;
+  color: #F1F6F9 !important;       /* Texto Blanco/Claro */
+  padding: 12px 16px !important;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; /* Separador muy sutil */
+  border-radius: 0 !important;
   margin: 0 !important;
 }
 
-.custom-menu .p-menuitem-link {
-  padding: 12px 16px !important;
-  background: transparent !important;
-  border-radius: 0 !important;
-  color: #ffffff !important;
-  transition: all 0.2s ease;
-}
-
-.custom-menu .p-menuitem-link:hover { 
-  background: #0a2540 !important;
-}
-
-.custom-menu .p-menuitem-icon {
-  margin-right: 12px !important;
-  font-size: 1.1rem;
-  color: #64b5f6 !important;
-}
-
-.custom-menu .p-menuitem-text {
-  font-weight: 500;
-  letter-spacing: 0.3px;
+/* 4. Hover sobre item (cuando pasas el mouse) */
+.p-dropdown-item:not(.p-highlight):not(.p-disabled):hover,
+.p-select-item:not(.p-highlight):not(.p-disabled):hover,
+.p-select-option:not(.p-select-option-selected):not(.p-disabled):focus,
+.p-select-option:not(.p-select-option-selected):not(.p-disabled):hover {
+  background: rgba(255, 255, 255, 0.1) !important; /* Azul un poco más claro */
   color: #ffffff !important;
 }
 
-/* Color específico para el icono de eliminar */
-.custom-menu .p-menuitem:last-child .p-menuitem-icon {
-  color: #E94560 !important;
-}
-
-/* Efecto focus para accesibilidad */
-.custom-menu .p-menuitem-link:focus {
-  background: #0a2540 !important;
-  outline: none;
-}
-
-/* ===================================
-   DROPDOWNS - FONDO #0F3460
-   =================================== */
-
-/* Panel del dropdown (la lista que se despliega) */
-.p-dropdown-panel {
-  background-color: #0F3460 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Items del dropdown */
-.p-dropdown-panel .p-dropdown-items {
-  background-color: #0F3460 !important;
-  padding: 0.5rem 0 !important;
-}
-
-.p-dropdown-panel .p-dropdown-item {
-  background: transparent !important;
-  color: #F1F6F9 !important;
-  padding: 12px 16px !important;
-  transition: background 0.2s ease;
-  border-radius: 0 !important;
-}
-
-.p-dropdown-panel .p-dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
-}
-
-.p-dropdown-panel .p-dropdown-item.p-highlight {
-  background: rgba(67, 97, 238, 0.2) !important;
+/* 5. Item seleccionado (Highlight) */
+.p-dropdown-item.p-highlight,
+.p-select-item.p-highlight,
+.p-select-option.p-select-option-selected {
+  background: rgba(67, 97, 238, 0.2) !important; /* Azul brillante translúcido */
   color: #ffffff !important;
+  font-weight: 600;
 }
 
 /* Header del dropdown (si tiene filtro) */
-.p-dropdown-panel .p-dropdown-header {
+.p-dropdown-header,
+.p-select-header {
   background-color: #0F3460 !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   padding: 0.75rem 1rem !important;
+  color: #F1F6F9 !important;
 }
 
-.p-dropdown-panel .p-dropdown-filter {
+/* Input de filtro dentro del panel */
+.p-dropdown-filter,
+.p-select-filter {
   background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: #F1F6F9 !important;
 }
 
-.p-dropdown-panel .p-dropdown-filter::placeholder {
-  color: rgba(174, 187, 199, 0.6) !important;
-}
-
-/* Placeholder del dropdown cuando no hay selección */
-.p-dropdown-panel .p-dropdown-empty-message {
-  background: transparent !important;
+/* Mensaje vacío */
+.p-dropdown-empty-message,
+.p-select-empty-message {
+  background: #0F3460 !important;
   color: #aebbc7 !important;
-  padding: 12px 16px !important;
-  font-style: italic;
+  padding: 1rem !important;
 }
 
-/* Diálogos globales */
+/* --- MANTENEMOS LOS DIÁLOGOS OSCUROS --- */
 .p-dialog.custom-dialog-dark {
   background-color: #0F3460 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 8px !important;
 }
+.p-dialog.custom-dialog-dark .p-dialog-header { background-color: #0F3460 !important; color: #F1F6F9 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; }
+.p-dialog.custom-dialog-dark .p-dialog-title { color: #F1F6F9 !important; }
+.p-dialog.custom-dialog-dark .p-dialog-header-icon { color: #aebbc7 !important; }
+.p-dialog.custom-dialog-dark .p-dialog-content { background-color: #0F3460 !important; color: #F1F6F9 !important; }
+.p-dialog.custom-dialog-dark .p-dialog-footer { background-color: #0F3460 !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; }
+.p-dialog-mask { background-color: rgba(0, 0, 0, 0.6) !important; }
 
-.p-dialog.custom-dialog-dark .p-dialog-header {
+/* Menú contextual (Click derecho) - Oscuro */
+.p-menu.custom-menu,
+.p-menu.p-menu-overlay.custom-menu { 
   background-color: #0F3460 !important;
-  color: #F1F6F9 !important;
-  padding: 1.5rem !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
 }
-
-.p-dialog.custom-dialog-dark .p-dialog-title {
-  color: #F1F6F9 !important;
-  font-weight: 600;
-}
-
-.p-dialog.custom-dialog-dark .p-dialog-header-icon {
-  color: #aebbc7 !important;
-}
-
-.p-dialog.custom-dialog-dark .p-dialog-header-icon:hover {
-  color: #fff !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-}
-
-.p-dialog.custom-dialog-dark .p-dialog-content {
-  background-color: #0F3460 !important;
-  padding: 1.5rem !important;
-  color: #F1F6F9 !important;
-}
-
-.p-dialog.custom-dialog-dark .p-dialog-footer {
-  background-color: #0F3460 !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-  padding: 1rem 1.5rem !important;
-}
-
-.p-dialog-mask {
-  background-color: rgba(0, 0, 0, 0.6) !important;
-}
+.custom-menu .p-menuitem-link { color: #F1F6F9 !important; }
+.custom-menu .p-menuitem-link:hover { background: rgba(255, 255, 255, 0.1) !important; }
+.custom-menu .p-menuitem-icon { color: #64b5f6 !important; }
+.custom-menu .p-menuitem-text { color: #F1F6F9 !important; }
 </style>
