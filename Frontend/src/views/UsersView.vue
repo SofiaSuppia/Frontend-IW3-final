@@ -713,6 +713,8 @@ const filteredUsers = computed(() => {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
   color: #F1F6F9 !important;
+  border-radius: 12px !important;
+  margin: 2rem !important;
 }
 :deep(.custom-dialog-dark .p-dialog-header),
 :deep(.custom-dialog-dark .p-dialog-content),
@@ -899,7 +901,8 @@ const filteredUsers = computed(() => {
 .p-dialog.custom-dialog-dark {
   background-color: #0F3460 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px !important;
+  border-radius: 12px !important;
+  margin: 2rem !important; 
 }
 .p-dialog.custom-dialog-dark .p-dialog-header { background-color: #0F3460 !important; color: #F1F6F9 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; }
 .p-dialog.custom-dialog-dark .p-dialog-title { color: #F1F6F9 !important; }
@@ -915,9 +918,48 @@ const filteredUsers = computed(() => {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 8px !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  padding: 1rem !important; /* Espacio interno general */
 }
-.custom-menu .p-menuitem-link { color: #F1F6F9 !important; }
+
+/* 1. ESPACIO ENTRE CADA PALABRA (ITEMS) */
+.custom-menu .p-menu-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 15px !important; /* <--- ESTO SEPARA LOS BOTONES VERTICALMENTE */
+}
+
+.custom-menu .p-menuitem {
+  margin: 0 !important; /* Reseteamos márgenes individuales */
+}
+
+/* 2. ESPACIO ENTRE ÍCONO Y TEXTO */
+.custom-menu .p-menuitem-link { 
+  color: #F1F6F9 !important; 
+  padding: 10px 12px !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  /* gap: 16px !important; /* Ajuste estándar para separar el ícono del texto */
+}
+
+.custom-menu .p-menuitem-link:hover { 
+  background: rgba(255, 255, 255, 0.1) !important; 
+}
+
+/* Icono */
+.custom-menu .p-menuitem-icon { 
+  color: #64b5f6 !important; 
+  margin-right: 20px !important; /* Quitamos margen antiguo para que mande el gap */
+  font-size: 1.1rem !important;
+}
+
+/* Texto */
+.custom-menu .p-menuitem-text { 
+  color: #F1F6F9 !important; 
+  font-weight: 500;
+}
+/*.custom-menu .p-menuitem-link { color: #F1F6F9 !important; }
 .custom-menu .p-menuitem-link:hover { background: rgba(255, 255, 255, 0.1) !important; }
 .custom-menu .p-menuitem-icon { color: #64b5f6 !important; }
-.custom-menu .p-menuitem-text { color: #F1F6F9 !important; }
+.custom-menu .p-menuitem-text { color: #F1F6F9 !important; }*/
 </style>
