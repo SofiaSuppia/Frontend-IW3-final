@@ -1,33 +1,32 @@
 import api from '../api/axios';
 
+// El backend define la ruta en Constants.URL_USUARIOS = "/usuarios"
+const ENDPOINT = '/usuarios'; 
+
 export const userService = {
   // Obtener todos los usuarios
   getAllUsers() {
-    return api.get('/users');
+    return api.get(ENDPOINT);
   },
 
   // Obtener usuario por ID
   getUserById(id) {
-    return api.get(`/users/${id}`);
+    return api.get(`${ENDPOINT}/${id}`);
   },
 
   // Crear nuevo usuario
   createUser(userData) {
-    return api.post('/users', userData);
+    return api.post(ENDPOINT, userData);
   },
 
   // Actualizar usuario
-  updateUser(id, userData) {
-    return api.put(`/users/${id}`, userData);
+  updateUser(userData) {
+    // El backend espera el objeto User completo en el body para el PUT
+    return api.put(ENDPOINT, userData);
   },
 
   // Eliminar usuario
   deleteUser(id) {
-    return api.delete(`/users/${id}`);
-  },
-
-  // Habilitar/Deshabilitar usuario
-  toggleUserStatus(id, enabled) {
-    return api.patch(`/users/${id}/status`, { enabled });
+    return api.delete(`${ENDPOINT}/${id}`);
   }
 };

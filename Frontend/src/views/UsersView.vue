@@ -190,13 +190,16 @@
       </template>
     </Dialog>
 
+    <Toast />
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import Sidebar from '../components/Sidebar.vue';
+import { userService } from '../services/userService'; // Importar servicio
+import { useToast } from 'primevue/usetoast'; // Importar Toast
 
 // PrimeVue Components
 import DataTable from 'primevue/datatable';
@@ -209,14 +212,16 @@ import InputText from 'primevue/inputtext';
 import Checkbox from 'primevue/checkbox';
 import Password from 'primevue/password';
 import Menu from 'primevue/menu';
+import Toast from 'primevue/toast';
 
 const router = useRouter();
+const toast = useToast();
 
-// --- 1. CONFIGURACIÓN CENTRALIZADA (Best Practice) ---
+// --- CONFIGURACIÓN ---
 const ROLE_CONFIG = {
   'Admin':    { severity: 'danger',  icon: 'pi pi-shield', color: '#E94560' },
-  'Operador': { severity: 'info',    icon: 'pi pi-cog',    color: '#64b5f6' },
-  'Cliente':  { severity: 'warning', icon: 'pi pi-user',   color: '#F9A826' }
+  'Operator': { severity: 'info',    icon: 'pi pi-cog',    color: '#64b5f6' },
+  'Cli':  { severity: 'warning', icon: 'pi pi-user',   color: '#F9A826' }
 };
 
 const TYPE_CONFIG = {
@@ -229,7 +234,7 @@ const STATUS_CONFIG = {
   'Deshabilitada': { severity: 'danger' }
 };
 
-// Helpers seguros
+// Helpers
 const getRoleConfig = (role) => ROLE_CONFIG[role] || { severity: 'secondary', color: '#ccc' };
 const getTypeConfig = (type) => TYPE_CONFIG[type] || { severity: 'secondary' };
 const getStatusConfig = (status) => STATUS_CONFIG[status] || { severity: 'secondary' };
@@ -238,10 +243,12 @@ const getStatusConfig = (status) => STATUS_CONFIG[status] || { severity: 'second
 const showAddUserDialog = ref(false);
 const showEditUserDialog = ref(false);
 const newUser = ref({ isInternal: true, email: '', username: '', password: '', role: null });
-const editingUser = ref({ isInternal: true, email: '', username: '', password: '', role: null, status: null });
+const editingUser = ref({ idUser: null, isInternal: true, email: '', username: '', password: '', role: null, status: null });
 const filters = ref({ role: null, type: null, status: null });
 const actionMenu = ref(null);
 const selectedUser = ref(null);
+const users = ref([]); // Datos reales
+const loading = ref(false);
 
 // --- MENÚ CONTEXTUAL ---
 const menuItems = computed(() => [
@@ -255,11 +262,63 @@ const menuItems = computed(() => [
     label: 'Eliminar', 
     icon: 'pi pi-trash', 
     color: '#E94560', 
-    command: () => deleteUser(selectedUser.value) 
+    command: () => confirmDeleteUser(selectedUser.value) 
   }
 ]);
 
-// --- LÓGICA ---
+// --- CARGAR USUARIOS (GET) ---
+const loadUsers = async () => {
+  loading.value = true;
+  try {
+    const response = await userService.getAllUsers();
+    const rawData = response.data || [];
+
+    users.value = rawData.map(u => {
+      // Lógica de mapeo Backend -> Frontend
+      let roleName = 'Cli'; // Valor por defecto (asumimos Cliente si no encontramos otro)
+      
+      if (u.roles && u.roles.length > 0) {
+        // Convertimos a string y mayúsculas para comparar sin errores
+        const rawRole = (u.roles[0].name || u.roles[0]).toString().toUpperCase(); 
+        
+        if (rawRole.includes('ADMIN')) {
+            roleName = 'Admin';
+        } else if (rawRole.includes('OPERATOR') || rawRole.includes('OPERADOR')) {
+            roleName = 'Operator';
+        } else {
+            // Si no es Admin ni Operator, asumimos que es Cliente (Cli)
+            // Esto atrapa ROLE_CLIENT, ROLE_USER, o cualquier otro rol básico
+            roleName = 'Cli';
+        }
+      }
+
+      // Determinar tipo basado en rol
+      const type = roleName === 'Cli' ? 'Externo' : 'Interno';
+
+      return {
+        id: u.idUser, 
+        username: u.username,
+        email: u.email,
+        role: roleName, // Ahora "Cli" se asignará correctamente a todos los que no sean Admin/Operator
+        type: type,
+        status: u.enabled ? 'Habilitada' : 'Deshabilitada',
+        originalRoles: u.roles 
+      };
+    });
+
+  } catch (error) {
+    console.error("Error cargando usuarios:", error);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los usuarios', life: 3000 });
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  loadUsers();
+});
+
+// --- CREAR USUARIO (POST) ---
 const openNewUserDialog = () => {
   newUser.value = { isInternal: true, email: '', username: '', password: '', role: null };
   showAddUserDialog.value = true;
@@ -269,18 +328,32 @@ const closeAddDialog = () => {
   showAddUserDialog.value = false;
 };
 
-const saveUser = () => {
-  console.log("Guardando usuario:", newUser.value);
-  // Aquí agregarías el nuevo usuario al array
-  // users.value.push({ 
-  //   id: users.value.length + 1, 
-  //   ...newUser.value, 
-  //   type: newUser.value.isInternal ? 'Interno' : 'Externo',
-  //   status: 'Habilitada'
-  // });
-  showAddUserDialog.value = false;
+const saveUser = async () => {
+  try {
+    // Preparar payload para Java
+    const roleName = "ROLE_" + newUser.value.role.toUpperCase();
+    
+    const payload = {
+      username: newUser.value.username,
+      password: newUser.value.password,
+      email: newUser.value.email,
+      enabled: true,
+      // Java espera un Set/List de objetos Role
+      roles: [{ name: roleName }] 
+    };
+
+    await userService.createUser(payload);
+    
+    toast.add({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado', life: 3000 });
+    showAddUserDialog.value = false;
+    loadUsers(); // Recargar lista
+  } catch (error) {
+    console.error("Error creando usuario:", error);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Falló la creación del usuario', life: 3000 });
+  }
 };
 
+// --- EDITAR USUARIO (PUT) ---
 const toggleMenu = (event, user) => {
   selectedUser.value = user;
   actionMenu.value.toggle(event);
@@ -289,8 +362,9 @@ const toggleMenu = (event, user) => {
 const openEditDialog = (user) => {
   editingUser.value = { 
     ...user,
+    idUser: user.id, // Recuperar el ID real de Java
     isInternal: user.type === 'Interno',
-    password: '' // No mostrar contraseña actual
+    password: '' // Limpiar password
   };
   showEditUserDialog.value = true;
 };
@@ -299,38 +373,52 @@ const closeEditDialog = () => {
   showEditUserDialog.value = false;
 };
 
-const updateUser = () => {
-  console.log("Actualizando usuario:", editingUser.value);
-  // Aquí actualizarías el usuario en el array
-  // const index = users.value.findIndex(u => u.id === editingUser.value.id);
-  // if (index !== -1) {
-  //   users.value[index] = {
-  //     ...editingUser.value,
-  //     type: editingUser.value.isInternal ? 'Interno' : 'Externo'
-  //   };
-  // }
-  showEditUserDialog.value = false;
+const updateUser = async () => {
+  try {
+    const roleName = "ROLE_" + editingUser.value.role.toUpperCase();
+
+    const payload = {
+      idUser: editingUser.value.idUser, // ID es obligatorio para update
+      username: editingUser.value.username,
+      email: editingUser.value.email,
+      enabled: editingUser.value.status === 'Habilitada',
+      roles: [{ name: roleName }]
+    };
+
+    // Solo enviar password si se escribió algo nuevo
+    if (editingUser.value.password) {
+      payload.password = editingUser.value.password;
+    } else {
+      // Si el backend requiere password obligatoria en el DTO, 
+      // quizás necesites manejar esto diferente en el backend.
+      // Por ahora intentamos enviarlo sin password a ver si JPA lo ignora o si falla.
+      // Si falla, tendrás que modificar el backend para que acepte password null.
+    }
+
+    await userService.updateUser(payload);
+    
+    toast.add({ severity: 'success', summary: 'Actualizado', detail: 'Usuario modificado', life: 3000 });
+    showEditUserDialog.value = false;
+    loadUsers();
+  } catch (error) {
+    console.error("Error actualizando:", error);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar', life: 3000 });
+  }
 };
 
-const deleteUser = (user) => {
-  console.log("Eliminando usuario:", user);
-  // Aquí implementarías la lógica de eliminación
-  // if (confirm(`¿Estás seguro de eliminar al usuario ${user.username}?`)) {
-  //   users.value = users.value.filter(u => u.id !== user.id);
-  // }
+// --- ELIMINAR USUARIO (DELETE) ---
+const confirmDeleteUser = async (user) => {
+  try {
+    await userService.deleteUser(user.id);
+    toast.add({ severity: 'success', summary: 'Eliminado', detail: 'Usuario eliminado', life: 3000 });
+    loadUsers();
+  } catch (error) {
+    console.error("Error eliminando:", error);
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar', life: 3000 });
+  }
 };
 
-// --- DATOS SIMULADOS ---
-const users = ref([
-  { id: 1, username: 'admin', email: 'admin@mail.com', role: 'Admin', type: 'Interno', status: 'Habilitada' },
-  { id: 2, username: 'operador1', email: 'user@mail.com', role: 'Operador', type: 'Interno', status: 'Habilitada' },
-  { id: 3, username: 'cli1', email: 'cli1@mail.com', role: 'Cliente', type: 'Externo', status: 'Habilitada' },
-  { id: 4, username: 'cli2', email: 'cli2@gmail.com', role: 'Cliente', type: 'Externo', status: 'Deshabilitada' },
-  { id: 5, username: 'simon', email: 'simon@mail.com', role: 'Operador', type: 'Interno', status: 'Habilitada' },
-  { id: 6, username: 'transportes_sa', email: 'contact@trans.com', role: 'Cliente', type: 'Externo', status: 'Habilitada' },
-  { id: 44, username: 'super', email: 'super@mail.com', role: 'Admin', type: 'Interno', status: 'Habilitada' },
-]);
-
+// --- FILTROS ---
 const filteredUsers = computed(() => {
   return users.value.filter(user => {
     const matchRole = !filters.value.role || user.role === filters.value.role;
