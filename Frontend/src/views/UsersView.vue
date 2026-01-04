@@ -154,11 +154,26 @@
         </div>
         <div class="field mb-3 input-wrapper">
           <label for="addPassword" class="input-label">Contraseña</label>
-          <Password id="addPassword" v-model="newUser.password" class="w-full custom-input-pass" :feedback="false" toggleMask />
+          <Password 
+            id="addPassword" 
+            v-model="newUser.password" 
+            class="w-full custom-input-pass" 
+            :feedback="false" 
+            toggleMask 
+          />
         </div>
+        
+        <!-- CORRECCIÓN: Usar Select en lugar de Dropdown -->
         <div class="field mb-4 input-wrapper">
           <label for="addRole" class="input-label">Roles</label>
-          <Dropdown id="addRole" v-model="newUser.role" :options="Object.keys(ROLE_CONFIG)" placeholder="Seleccionar" class="w-full custom-dropdown-form" />
+          <Select 
+            id="addRole" 
+            v-model="newUser.role" 
+            :options="Object.keys(ROLE_CONFIG)" 
+            placeholder="Seleccionar" 
+            class="w-full custom-dropdown-form" 
+            appendTo="body"
+          />
         </div>
       </div>
       <template #footer>
@@ -192,19 +207,46 @@
         <div class="field mb-3 input-wrapper">
           <label for="editUsername" class="input-label">Username</label>
           <InputText id="editUsername" v-model="editingUser.username" class="w-full custom-input" :readonly="true" />
-          <small class="field-hint">El username no puede modificarse</small>
+          <small class="field-hint" style="color: #aebbc7; font-size: 0.8rem;">El username no puede modificarse</small>
         </div>
+        
+        <!-- CORRECCIÓN: Password con clase ajustada -->
         <div class="field mb-3 input-wrapper">
           <label for="editPassword" class="input-label">Nueva Contraseña (opcional)</label>
-          <Password id="editPassword" v-model="editingUser.password" class="w-full custom-input-pass" :feedback="false" toggleMask placeholder="Dejar vacío para mantener" />
+          <Password 
+            id="editPassword" 
+            v-model="editingUser.password" 
+            class="w-full custom-input-pass" 
+            :feedback="false" 
+            toggleMask 
+            placeholder="Dejar vacío para mantener" 
+          />
         </div>
+
+        <!-- CORRECCIÓN: Usar Select en lugar de Dropdown -->
         <div class="field mb-3 input-wrapper">
           <label for="editRole" class="input-label">Roles</label>
-          <Dropdown id="editRole" v-model="editingUser.role" :options="Object.keys(ROLE_CONFIG)" placeholder="Seleccionar" class="w-full custom-dropdown-form" />
+          <Select 
+            id="editRole" 
+            v-model="editingUser.role" 
+            :options="Object.keys(ROLE_CONFIG)" 
+            placeholder="Seleccionar" 
+            class="w-full custom-dropdown-form" 
+            appendTo="body"
+          />
         </div>
+
+        <!-- CORRECCIÓN: Usar Select en lugar de Dropdown -->
         <div class="field mb-4 input-wrapper">
           <label for="editStatus" class="input-label">Estado</label>
-          <Dropdown id="editStatus" v-model="editingUser.status" :options="Object.keys(STATUS_CONFIG)" placeholder="Seleccionar" class="w-full custom-dropdown-form" />
+          <Select 
+            id="editStatus" 
+            v-model="editingUser.status" 
+            :options="Object.keys(STATUS_CONFIG)" 
+            placeholder="Seleccionar" 
+            class="w-full custom-dropdown-form" 
+            appendTo="body"
+          />
         </div>
       </div>
       <template #footer>
@@ -356,26 +398,43 @@ const closeAddDialog = () => {
 
 const saveUser = async () => {
   try {
-    // Preparar payload para Java
-    const roleName = "ROLE_" + newUser.value.role.toUpperCase();
-    
+    if (!newUser.value.role) {
+      toast.add({ severity: 'warn', summary: 'Atención', detail: 'Debes seleccionar un rol', life: 3000 });
+      return;
+    }
+
+    // 1. Mapeo de Roles para coincidir con la BD
+    // Definimos los IDs y descripciones aproximadas. 
+    // Si el backend busca por nombre, el ID puede ser ignorado, pero lo enviamos por si acaso.
+    const roleMap = {
+      'Admin':    { id: 1, name: 'ROLE_ADMIN',    description: 'administrador' },
+      'Operator': { id: 2, name: 'ROLE_OPERATOR', description: 'operador' },
+      'Cli':      { id: 3, name: 'ROLE_CLIENT',   description: 'cliente' }
+    };
+
+    const selectedRoleObj = roleMap[newUser.value.role];
+
+    // 2. Construcción del JSON exacto que pide el backend
     const payload = {
+      accountNonExpired: true,
+      accountNonLocked: true,
+      credentialsNonExpired: true,
+      enabled: true,
+      email: newUser.value.email,
       username: newUser.value.username,
       password: newUser.value.password,
-      email: newUser.value.email,
-      enabled: true,
-      // Java espera un Set/List de objetos Role
-      roles: [{ name: roleName }] 
+      roles: [ selectedRoleObj ], // Enviamos el objeto completo
+      alarmas: []
     };
 
     await userService.createUser(payload);
     
-    toast.add({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado', life: 3000 });
+    toast.add({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado correctamente', life: 3000 });
     showAddUserDialog.value = false;
-    loadUsers(); // Recargar lista
+    loadUsers(); 
   } catch (error) {
     console.error("Error creando usuario:", error);
-    toast.add({ severity: 'error', summary: 'Error', detail: 'Falló la creación del usuario', life: 3000 });
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Falló la creación. Verifique los datos.', life: 3000 });
   }
 };
 
@@ -401,34 +460,38 @@ const closeEditDialog = () => {
 
 const updateUser = async () => {
   try {
-    const roleName = "ROLE_" + editingUser.value.role.toUpperCase();
+    // 1. Mapeo de Roles (Igual que en crear usuario)
+    // Es crucial enviar el objeto completo { id, name, description }
+    const roleMap = {
+      'Admin':    { id: 1, name: 'ROLE_ADMIN',    description: 'administrador' },
+      'Operator': { id: 2, name: 'ROLE_OPERATOR', description: 'operador' },
+      'Cli':      { id: 3, name: 'ROLE_CLIENT',   description: 'cliente' }
+    };
 
+    const selectedRoleObj = roleMap[editingUser.value.role];
+
+    // 2. Construcción del JSON exacto
     const payload = {
-      idUser: editingUser.value.idUser, // ID es obligatorio para update
+      idUser: editingUser.value.idUser,
       username: editingUser.value.username,
       email: editingUser.value.email,
       enabled: editingUser.value.status === 'Habilitada',
-      roles: [{ name: roleName }]
+      roles: [ selectedRoleObj ] // Array con el objeto completo
     };
 
-    // Solo enviar password si se escribió algo nuevo
-    if (editingUser.value.password) {
+    // Solo agregamos password al payload si el usuario escribió una nueva
+    if (editingUser.value.password && editingUser.value.password.trim() !== '') {
       payload.password = editingUser.value.password;
-    } else {
-      // Si el backend requiere password obligatoria en el DTO, 
-      // quizás necesites manejar esto diferente en el backend.
-      // Por ahora intentamos enviarlo sin password a ver si JPA lo ignora o si falla.
-      // Si falla, tendrás que modificar el backend para que acepte password null.
     }
 
     await userService.updateUser(payload);
     
-    toast.add({ severity: 'success', summary: 'Actualizado', detail: 'Usuario modificado', life: 3000 });
+    toast.add({ severity: 'success', summary: 'Actualizado', detail: 'Usuario modificado correctamente', life: 3000 });
     showEditUserDialog.value = false;
     loadUsers();
   } catch (error) {
     console.error("Error actualizando:", error);
-    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar', life: 3000 });
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el usuario', life: 3000 });
   }
 };
 
@@ -640,6 +703,7 @@ const filteredUsers = computed(() => {
   letter-spacing: 0.5px;
 }
 
+/* ESTILOS PARA PASSWORD Y INPUTS */
 :deep(.custom-input), 
 :deep(.custom-input-pass .p-inputtext), 
 :deep(.custom-dropdown-form) {
@@ -649,7 +713,26 @@ const filteredUsers = computed(() => {
   padding: 0 !important; 
   font-size: 0.95rem; 
   box-shadow: none !important;
+  width: 100%; /* IMPORTANTE: Ocupar todo el ancho */
 }
+
+/* CORRECCIÓN ESPECÍFICA PARA EL COMPONENTE PASSWORD */
+:deep(.custom-input-pass) {
+  width: 100%;
+}
+
+:deep(.custom-input-pass .p-inputtext) {
+  width: 100%;
+}
+
+/* Ajuste del icono del ojo */
+:deep(.custom-input-pass .p-password-show-icon),
+:deep(.custom-input-pass .p-password-hide-icon) {
+  color: #aebbc7 !important;
+  right: 0 !important; 
+  cursor: pointer;
+}
+
 :deep(.custom-dropdown-form .p-dropdown-trigger) { color: #aebbc7; }
 :deep(.p-checkbox .p-checkbox-box) { 
   background: rgba(255, 255, 255, 0.05); 
