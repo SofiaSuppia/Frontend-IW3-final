@@ -65,8 +65,13 @@
 
         <!-- TABLA DE USUARIOS -->
         <div class="table-wrapper">
-          <DataTable :value="filteredUsers" :paginator="true" :rows="6" class="users-table" responsiveLayout="scroll"
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink">
+          
+          <!-- CAMBIO: Se eliminaron las propiedades de paginación (:paginator, :rows, paginatorTemplate) -->
+          <DataTable 
+            :value="filteredUsers" 
+            class="users-table" 
+            responsiveLayout="scroll"
+          >
             
             <Column field="id" header="ID" style="width: 50px"></Column>
             
@@ -82,47 +87,34 @@
             </Column>
             
             <Column field="email" header="Email"></Column>
-            
             <Column field="role" header="Rol">
               <template #body="slotProps">
-                <Tag 
-                  :value="slotProps.data.role" 
-                  :severity="getRoleConfig(slotProps.data.role).severity"
-                  :icon="getRoleConfig(slotProps.data.role).icon"
-                />
+                <Tag :value="slotProps.data.role" :severity="getRoleConfig(slotProps.data.role).severity" :icon="getRoleConfig(slotProps.data.role).icon" />
               </template>
             </Column>
-            
             <Column field="type" header="Tipo">
               <template #body="slotProps">
-                <Tag 
-                  :value="slotProps.data.type" 
-                  :severity="getTypeConfig(slotProps.data.type).severity"
-                  style="background: transparent; border: none; padding: 0; font-weight: 500;"
-                />
+                <Tag :value="slotProps.data.type" :severity="getTypeConfig(slotProps.data.type).severity" style="background: transparent; border: none; padding: 0; font-weight: 500;" />
               </template>
             </Column>
-            
             <Column field="status" header="Estado">
               <template #body="slotProps">
-                <Tag 
-                  :value="slotProps.data.status" 
-                  :severity="getStatusConfig(slotProps.data.status).severity" 
-                  rounded 
-                />
+                <Tag :value="slotProps.data.status" :severity="getStatusConfig(slotProps.data.status).severity" rounded />
               </template>
             </Column>
-            
             <Column header="Acciones" style="width: 100px; text-align: center">
               <template #body="slotProps">
-                <Button 
-                  icon="pi pi-ellipsis-v" 
-                  class="p-button-text p-button-rounded action-btn" 
-                  @click="toggleMenu($event, slotProps.data)"
-                />
+                <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-rounded action-btn" @click="toggleMenu($event, slotProps.data)" />
               </template>
             </Column>
+
           </DataTable>
+
+          <!-- ELIMINADO: <BluePaginator ... /> -->
+          
+          <div v-if="filteredUsers.length === 0" class="text-center p-4" style="color: #aebbc7;">
+            No hay usuarios para mostrar.
+          </div>
         </div>
 
       </div>
@@ -318,7 +310,7 @@ const editingUser = ref({ idUser: null, isInternal: true, email: '', username: '
 const filters = ref({ role: null, type: null, status: null });
 const actionMenu = ref(null);
 const selectedUser = ref(null);
-const users = ref([]); // Datos reales
+const users = ref([]); 
 const loading = ref(false);
 
 // --- MENÚ CONTEXTUAL ---
@@ -618,14 +610,12 @@ const filteredUsers = computed(() => {
 
 /* --- TABLE WRAPPER CON EFECTO GLASS --- */
 .table-wrapper { 
-  background: rgba(255, 255, 255, 0.05) !important; /* ← Fondo semi-transparente */
-  backdrop-filter: blur(10px); /* ← Efecto blur */
+  background: rgba(255, 255, 255, 0.05) !important; 
+  backdrop-filter: blur(10px); 
   border: 1px solid rgba(255, 255, 255, 0.1); 
   border-radius: 15px; 
   padding: 1.5rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); 
-  opacity: 0; 
-  animation: fadeIn 0.6s forwards 0.2s;
 }
 
 /* --- TABLE STYLES (FONDO TRANSPARENTE) --- */
