@@ -98,7 +98,7 @@
                 <Tag 
                   :value="slotProps.data.type" 
                   :severity="getTypeConfig(slotProps.data.type).severity"
-                  style="background: transparent; border: 1px solid currentColor;"
+                  style="background: transparent; border: none; padding: 0; font-weight: 500;"
                 />
               </template>
             </Column>
@@ -631,6 +631,11 @@ const filteredUsers = computed(() => {
 /* --- TABLE STYLES (FONDO TRANSPARENTE) --- */
 :deep(.users-table) {
   background: transparent !important;
+}
+
+/* NUEVO: Separación entre el ícono y el texto en los Tags (Roles) */
+:deep(.p-tag .p-tag-icon) {
+  margin-right: 0.5rem !important; /* Espacio de 8px */
 }
 
 :deep(.users-table .p-datatable-wrapper) {
