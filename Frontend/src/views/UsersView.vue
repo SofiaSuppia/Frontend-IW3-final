@@ -19,20 +19,45 @@
           </div>
         </div>
 
-        <!-- BARRA DE FILTROS -->
+        <!-- BARRA DE FILTROS MEJORADA -->
         <div class="filters-panel glass-panel">
-          <div class="filter-group">
-            <label>Rol</label>
-            <Dropdown v-model="filters.role" :options="Object.keys(ROLE_CONFIG)" placeholder="Todos" class="custom-dropdown" showClear />
+          
+          <!-- Filtro Rol -->
+          <div class="filter-item">
+            <Select 
+              v-model="filters.role" 
+              :options="Object.keys(ROLE_CONFIG)" 
+              placeholder="Filtrar por Rol" 
+              class="w-full custom-select-input" 
+              :showClear="true"
+              appendTo="body"
+            />
           </div>
-          <div class="filter-group">
-            <label>Tipo</label>
-            <Dropdown v-model="filters.type" :options="Object.keys(TYPE_CONFIG)" placeholder="Todos" class="custom-dropdown" showClear />
+
+          <!-- Filtro Tipo -->
+          <div class="filter-item">
+            <Select 
+              v-model="filters.type" 
+              :options="Object.keys(TYPE_CONFIG)" 
+              placeholder="Filtrar por Tipo" 
+              class="w-full custom-select-input" 
+              :showClear="true"
+              appendTo="body"
+            />
           </div>
-          <div class="filter-group">
-            <label>Estado</label>
-            <Dropdown v-model="filters.status" :options="Object.keys(STATUS_CONFIG)" placeholder="Todos" class="custom-dropdown" showClear />
+
+          <!-- Filtro Estado -->
+          <div class="filter-item">
+            <Select 
+              v-model="filters.status" 
+              :options="Object.keys(STATUS_CONFIG)" 
+              placeholder="Filtrar por Estado" 
+              class="w-full custom-select-input" 
+              :showClear="true"
+              appendTo="body"
+            />
           </div>
+
         </div>
 
         <!-- TABLA DE USUARIOS -->
@@ -213,6 +238,7 @@ import Checkbox from 'primevue/checkbox';
 import Password from 'primevue/password';
 import Menu from 'primevue/menu';
 import Toast from 'primevue/toast';
+import Select from 'primevue/select';
 
 const router = useRouter();
 const toast = useToast();
@@ -469,16 +495,19 @@ const filteredUsers = computed(() => {
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
-.filter-group { display: flex; flex-direction: column; gap: 5px; flex: 1; }
-.filter-group label { color: #aebbc7; font-size: 0.9rem; font-weight: 500; }
+.filter-item { flex: 1; }
+.filter-item:first-child { margin-right: 1rem; }
 
-:deep(.custom-dropdown) { 
+:deep(.custom-select-input) { 
   background: rgba(255,255,255,0.05) !important; 
   border: 1px solid rgba(255,255,255,0.1) !important; 
   border-radius: 6px;
+  color: #F1F6F9 !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.9rem !important;
 }
-:deep(.custom-dropdown .p-dropdown-label) { color: #F1F6F9; }
-:deep(.custom-dropdown .p-dropdown-trigger) { color: #aebbc7; }
+:deep(.custom-select-input .p-dropdown-label) { color: #F1F6F9; }
+:deep(.custom-select-input .p-dropdown-trigger) { color: #aebbc7; }
 
 /* --- TABLE WRAPPER CON EFECTO GLASS --- */
 .table-wrapper { 
