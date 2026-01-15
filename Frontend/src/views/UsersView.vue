@@ -866,7 +866,7 @@ const filteredUsers = computed(() => {
   transition: all 0.2s ease;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; /* Separador muy sutil */
   border-radius: 0 !important;
-  margin: 0 !important;
+  /*margin: 0 !important;*/
 }
 
 /* 4. Hover sobre item (cuando pasas el mouse) */
@@ -941,7 +941,7 @@ const filteredUsers = computed(() => {
 .custom-menu .p-menu-list {
   display: flex !important;
   flex-direction: column !important;
-  gap: 15px !important; /* <--- ESTO SEPARA LOS BOTONES VERTICALMENTE */
+  gap: 12px !important; /* <--- ESTO SEPARA LOS BOTONES VERTICALMENTE */
 }
 
 .custom-menu .p-menuitem {
@@ -951,11 +951,11 @@ const filteredUsers = computed(() => {
 /* 2. ESPACIO ENTRE ÍCONO Y TEXTO */
 .custom-menu .p-menuitem-link { 
   color: #F1F6F9 !important; 
-  padding: 10px 12px !important;
+  padding: 12px 16px !important;
   border-radius: 6px !important;
   display: flex !important;
   align-items: center !important;
-  /* gap: 16px !important; /* Ajuste estándar para separar el ícono del texto */
+  /* gap: 20px !important; */
 }
 
 .custom-menu .p-menuitem-link:hover { 
@@ -965,14 +965,16 @@ const filteredUsers = computed(() => {
 /* Icono */
 .custom-menu .p-menuitem-icon { 
   color: #64b5f6 !important; 
-  margin-right: 20px !important; /* Quitamos margen antiguo para que mande el gap */
-  font-size: 1.1rem !important;
+  margin-right: 25px !important; 
+  font-size: 1.2rem !important;
+  display: inline-block !important;
 }
 
 /* Texto */
 .custom-menu .p-menuitem-text { 
   color: #F1F6F9 !important; 
   font-weight: 500;
+  margin-left: 0 !important;
 }
 /*.custom-menu .p-menuitem-link { color: #F1F6F9 !important; }
 .custom-menu .p-menuitem-link:hover { background: rgba(255, 255, 255, 0.1) !important; }
