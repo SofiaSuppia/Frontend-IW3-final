@@ -133,6 +133,7 @@
       :draggable="false"
       :closeOnEscape="true"
       :dismissableMask="true"
+      :closable="false"
     >
       <div class="form-content">
         <div class="field-checkbox mb-4">
@@ -189,6 +190,7 @@
       :draggable="false"
       :closeOnEscape="true"
       :dismissableMask="true"
+      :closable="false"
     >
       <div class="form-content">
         <div class="field-checkbox mb-4">
