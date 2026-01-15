@@ -898,6 +898,7 @@ const filteredUsers = computed(() => {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 12px !important;
   margin: 2rem !important; 
+  padding: 40px !important;
 }
 .p-dialog.custom-dialog-dark .p-dialog-header { background-color: #0F3460 !important; color: #F1F6F9 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; }
 .p-dialog.custom-dialog-dark .p-dialog-title { color: #F1F6F9 !important; }
