@@ -760,19 +760,39 @@ const filteredUsers = computed(() => {
 /* CORRECCIÓN ESPECÍFICA PARA EL COMPONENTE PASSWORD */
 :deep(.custom-input-pass) {
   width: 100%;
+  position: relative;
+  display: block;
 }
 
 :deep(.custom-input-pass .p-inputtext) {
   width: 100%;
+  padding-right: 40px !important;
 }
 
 /* Ajuste del icono del ojo */
 :deep(.custom-input-pass .p-password-show-icon),
-:deep(.custom-input-pass .p-password-hide-icon) {
+:deep(.custom-input-pass .p-password-hide-icon),
+:deep(.custom-input-pass .p-icon),
+:deep(.custom-input-pass svg) {
   color: #aebbc7 !important;
-  right: 0 !important; 
+  /* right: 0 !important; */
   cursor: pointer;
+  position: absolute !important;
+  top: 50% !important;
+  right: 2px !important;
+  transform: translateY(-50%) !important;
+  left: auto !important;
+  margin-top: 0 !important;
+  width: 1.1rem !important;
+  height: 1.1rem !important;
+  z-index: 10 !important;
 }
+
+/*:deep(.custom-input-pass .p-password-show-icon:hover),
+:deep(.custom-input-pass .p-password-hide-icon:hover) {
+  color: #4361ee !important;
+}/* Efecto hover azul */
+
 
 :deep(.custom-dropdown-form .p-dropdown-trigger) { color: #aebbc7; }
 :deep(.p-checkbox .p-checkbox-box) { 
