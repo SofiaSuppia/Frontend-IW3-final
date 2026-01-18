@@ -116,7 +116,7 @@ const onSave = () => {
 </script>
 
 <style scoped>
-/* Estilos específicos que movimos aquí para limpiar la vista principal */
+/* Estilos específicos */
 .input-wrapper {
   background-color: #0F3460;
   border-radius: 6px; 
@@ -144,14 +144,65 @@ const onSave = () => {
 }
 
 :deep(.custom-dropdown-form .p-dropdown-trigger) { color: #aebbc7; }
-:deep(.p-checkbox .p-checkbox-box) { background: rgba(255, 255, 255, 0.05); border: 2px solid #aebbc7; border-radius: 4px; }
-:deep(.p-checkbox.p-checkbox-checked .p-checkbox-box) { background: #4361ee; border-color: #4361ee; }
-.field-checkbox { display: flex; align-items: center; margin-bottom: 1rem; padding: 12px 16px; background-color: #0F3460; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); }
+
+/* --- CHECKBOX ESTILO IMAGEN --- */
+/* Estado Normal: Cuadrado vacío, borde GRUESO y redondeado */
+:deep(.p-checkbox .p-checkbox-box) { 
+  background: transparent !important;   
+  border: 1px solid #aebbc7 !important; /* <--- Borde grueso (3px) como la imagen */
+  border-radius: 8px !important;        /* <--- Bordes bien redondeados */
+  width: 24px !important;               /* Un poco más grande para que luzca */
+  height: 24px !important;
+}
+
+/* Estado Seleccionado: Se pinta de azul pero mantiene la estética */
+:deep(.p-checkbox.p-checkbox-checked .p-checkbox-box) { 
+  background: #4361ee !important;       
+  border-color: #4361ee !important;     
+  color: #ffffff !important;            
+}
+
+/* Check interior más grueso */
+:deep(.p-checkbox .p-checkbox-icon) {
+  font-weight: 800 !important;          /* Icono bold */
+  font-size: 14px !important;
+}
+
+.field-checkbox { 
+  display: flex; 
+  align-items: center; 
+  gap: 15px;
+  margin-bottom: 1rem; 
+  padding: 12px 16px; 
+  background-color: #0F3460; 
+  border-radius: 6px; 
+  border: 1px solid rgba(255, 255, 255, 0.1); 
+}
+
+/* FOOTER Y BOTONES (Arreglado el espacio) */
 .dialog-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 0.5rem 0; }
+
 .cancel-btn { color: #aebbc7 !important; font-weight: 600; letter-spacing: 0.5px; font-size: 0.85rem; }
 .cancel-btn:hover { color: #fff !important; background: rgba(255, 255, 255, 0.05) !important; }
+
 .save-btn { color: #7e73f0 !important; font-weight: 700; letter-spacing: 0.5px; font-size: 0.85rem; }
 .save-btn:hover { background: rgba(126, 115, 240, 0.1) !important; }
-.mb-3 { margin-bottom: 1rem; } .mb-4 { margin-bottom: 1.5rem; } .w-full { width: 100%; }
+
+/* SOLUCIÓN ESPACIO BOTONES: Usamos flexbox directo en el botón */
+:deep(.cancel-btn),
+:deep(.save-btn) {
+  display: flex !important;
+  gap: 12px !important; /* 12px de espacio entre icono y texto */
+  align-items: center !important;
+}
+
+/* Quitamos márgenes antiguos de los íconos para que no sumen espacio extra */
+:deep(.cancel-btn .p-button-icon),
+:deep(.save-btn .p-button-icon) {
+  margin-right: 0 !important;
+}
+
+.mb-3 { margin-bottom: 1rem; } 
+.mb-4 { margin-bottom: 1.5rem; } .w-full { width: 100%; }
 .label-text { color: #F1F6F9; font-size: 0.9rem; font-weight: 500; cursor: pointer; user-select: none; }
 </style>

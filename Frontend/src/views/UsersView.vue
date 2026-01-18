@@ -149,7 +149,7 @@ onMounted(loadUsers);
 /* HEADER */
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 .page-title { color: #F1F6F9; font-size: 2rem; margin: 0; font-weight: 600; }
-.add-user-btn { background-color: #4361ee !important; border: none !important; font-weight: 700 !important; font-size: 0.85rem !important; padding: 0.7rem 1.5rem !important; border-radius: 6px !important; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(67, 97, 238, 0.4); transition: transform 0.2s, box-shadow 0.2s; }
+.add-user-btn { background-color: #4361ee !important; border: none !important; font-weight: 700 !important; font-size: 0.85rem !important; padding: 0.7rem 1.5rem !important; border-radius: 6px !important; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(67, 97, 238, 0.4); transition: transform 0.2s, box-shadow 0.2s; display: flex !important; gap: 12px !important;}
 .add-user-btn:hover { background-color: #3a56d4 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(67, 97, 238, 0.5); }
 
 /* FILTROS */
