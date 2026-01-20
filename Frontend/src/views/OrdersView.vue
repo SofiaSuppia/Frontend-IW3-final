@@ -21,7 +21,7 @@
         <OrdersTable 
           :orders="filteredOrders"
           :loading="loading"
-          @view-details="viewOrderDetails"
+          @view-details="openOrderDetails"
           @view-conciliacion="viewConciliacion"
         />
 
@@ -40,6 +40,7 @@ import OrderFilters from '@/components/orders/OrderFilters.vue';
 import OrdersTable from '@/components/orders/OrdersTable.vue';
 import Toast from 'primevue/toast';
 import { useOrders } from '@/composables/useOrders';
+import { useRouter } from 'vue-router'; 
 
 /**
  * Vista principal de órdenes
@@ -56,6 +57,11 @@ const {
   viewOrderDetails,
   viewConciliacion
 } = useOrders();
+
+const router = useRouter();
+const openOrderDetails = (orderData) => {
+  router.push(`/orders/${orderData.id}`);
+};
 
 // Cargar órdenes al montar el componente
 onMounted(() => {

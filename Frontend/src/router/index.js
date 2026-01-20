@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import OrdersView from '../views/OrdersView.vue'
 import UsersView from '../views/UsersView.vue'
 import ProductsView from '@/views/ProductsView.vue'
+import OrderDetailView from '@/views/OrderDetailView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,10 @@ const router = createRouter({
     },
     { path: '/products', 
       component: ProductsView, 
+      meta: { requiresAuth: true } 
+    },
+    { path: '/orders/:id', 
+      component: OrderDetailView, 
       meta: { requiresAuth: true } 
     },
   ]
