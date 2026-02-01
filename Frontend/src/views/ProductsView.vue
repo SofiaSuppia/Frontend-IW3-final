@@ -22,14 +22,15 @@
             <i class="pi pi-spin pi-spinner"></i>
           </div>
 
+          <!-- CAMBIO: Quitar paginación y agregar scroll -->
           <DataTable 
             :value="products" 
             :loading="loading"
-            :paginator="true" 
-            :rows="10" 
             class="products-table"
+            responsiveLayout="scroll"
+            scrollable
+            scrollHeight="600px" 
             :emptyMessage="EMPTY_TABLE_MESSAGE"
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
           >
             <Column field="id" header="ID" :sortable="true" style="width: 80px" />
             

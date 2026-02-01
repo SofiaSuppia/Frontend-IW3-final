@@ -10,13 +10,11 @@
     <DataTable 
       :value="orders" 
       :loading="loading"
-      :paginator="true" 
-      :rows="8" 
       class="orders-table"
       responsiveLayout="scroll"
+      scrollable
+      scrollHeight="700px" 
       emptyMessage="No hay órdenes registradas"
-      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-      currentPageReportTemplate="{first} - {last} de {totalRecords}"
     >
       <!-- NUEVO: Columna ID -->
       <Column field="id" header="ID" :sortable="true" style="width: 80px">
