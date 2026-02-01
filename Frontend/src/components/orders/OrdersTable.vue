@@ -18,7 +18,13 @@
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
       currentPageReportTemplate="{first} - {last} de {totalRecords}"
     >
-      
+      <!-- NUEVO: Columna ID -->
+      <Column field="id" header="ID" :sortable="true" style="width: 80px">
+        <template #body="{ data }">
+          <span class="id-cell">#{{ data.id }}</span>
+        </template>
+      </Column>
+
       <!-- Columna: Camión -->
       <Column field="camion.patente" header="Camión">
         <template #body="{ data }">
@@ -166,6 +172,13 @@ const getTagStyle = (estado) => {
 .loading-overlay i {
   font-size: 3rem;
   color: #64b5f6;
+}
+
+.id-cell {
+  font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada para números */
+  font-weight: 700;
+  color: #64b5f6; /* Un color azul suave para resaltar el ID */
+  letter-spacing: -0.5px;
 }
 
 /* Celda de camión */
