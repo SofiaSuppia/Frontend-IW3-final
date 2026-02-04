@@ -35,12 +35,12 @@
       
       <div class="field mb-3 input-wrapper">
         <label class="input-label">Roles</label>
-        <Select v-model="form.role" :options="roleOptions" placeholder="Seleccionar" class="w-full custom-dropdown-form" appendTo="body" />
+        <Dropdown v-model="form.role" :options="roleOptions" placeholder="Seleccionar" class="w-full custom-dropdown-form" appendTo="body" />
       </div>
 
       <div v-if="isEditMode" class="field mb-4 input-wrapper">
         <label class="input-label">Estado</label>
-        <Select v-model="form.status" :options="statusOptions" placeholder="Seleccionar" class="w-full custom-dropdown-form" appendTo="body" />
+        <Dropdown v-model="form.status" :options="statusOptions" placeholder="Seleccionar" class="w-full custom-dropdown-form" appendTo="body" />
       </div>
     </div>
 
@@ -64,7 +64,7 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Checkbox from 'primevue/checkbox';
 import Password from 'primevue/password';
-import Select from 'primevue/select';
+import Dropdown from 'primevue/dropdown';
 
 const props = defineProps({
   visible: Boolean,

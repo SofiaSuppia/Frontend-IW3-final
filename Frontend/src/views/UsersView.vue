@@ -16,15 +16,15 @@
         <div class="filters-panel glass-panel">
           <div class="filter-item">
             <span class="filter-label">Rol</span>
-            <Select v-model="filters.role" :options="roleOptions" placeholder="Seleccionar" class="w-full custom-select-input" :showClear="true" appendTo="body" />
+            <Dropdown v-model="filters.role" :options="roleOptions" placeholder="Seleccionar" class="w-full custom-select-input" :showClear="true" appendTo="body" />
           </div>
           <div class="filter-item">
             <span class="filter-label">Tipo</span>
-            <Select v-model="filters.type" :options="typeOptions" placeholder="Seleccionar" class="w-full custom-select-input" :showClear="true" appendTo="body" />
+            <Dropdown v-model="filters.type" :options="typeOptions" placeholder="Seleccionar" class="w-full custom-select-input" :showClear="true" appendTo="body" />
           </div>
           <div class="filter-item">
             <span class="filter-label">Estado</span>
-            <Select v-model="filters.status" :options="statusOptions" placeholder="Seleccionar" class="w-full custom-select-input" :showClear="true" appendTo="body" />
+            <Dropdown v-model="filters.status" :options="statusOptions" placeholder="Seleccionar" class="w-full custom-select-input" :showClear="true" appendTo="body" />
           </div>
         </div>
 
@@ -89,7 +89,7 @@ import Button from 'primevue/button';
 import Tag from 'primevue/tag';
 import Menu from 'primevue/menu';
 import Toast from 'primevue/toast';
-import Select from 'primevue/select';
+import Dropdown from 'primevue/dropdown';
 
 // --- LOGICA DE NEGOCIO (Composable) ---
 const { users, loading, filters, filteredUsers, loadUsers, saveUser, deleteUser } = useUserManagement();
