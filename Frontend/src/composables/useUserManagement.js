@@ -5,7 +5,7 @@ import { userService } from '../services/userService';
 // --- CONSTANTES COMPARTIDAS ---
 export const CONFIG_ROLES = {
   'Admin':    { severity: 'danger',  icon: 'pi pi-shield', color: '#E94560' },
-  'Operator': { severity: 'info',    icon: 'pi pi-cog',    color: '#64b5f6' },
+  'Operador': { severity: 'info',    icon: 'pi pi-cog',    color: '#64b5f6' },
   'Cli':      { severity: 'warning', icon: 'pi pi-user',   color: '#F9A826' }
 };
 
@@ -21,7 +21,7 @@ export const CONFIG_STATUS = {
 
 const ROLE_DEFINITIONS = {
   'Admin':    { id: 1, name: 'ROLE_ADMIN',    description: 'administrador' },
-  'Operator': { id: 2, name: 'ROLE_OPERATOR', description: 'operador' },
+  'Operador': { id: 2, name: 'ROLE_OPERADOR', description: 'operador' },
   'Cli':      { id: 3, name: 'ROLE_CLIENT',   description: 'cliente' }
 };
 
@@ -37,7 +37,7 @@ export function useUserManagement() {
     if (u.roles && u.roles.length > 0) {
       const rawRole = (u.roles[0].name || u.roles[0]).toString().toUpperCase();
       if (rawRole.includes('ADMIN')) roleName = 'Admin';
-      else if (rawRole.includes('OPERATOR') || rawRole.includes('OPERADOR')) roleName = 'Operator';
+      else if (rawRole.includes('Operador') || rawRole.includes('OPERADOR')) roleName = 'Operador';
     }
     return {
       id: u.idUser,

@@ -24,6 +24,29 @@ export const orderService = {
             throw error;
         }
     },
+    // --- DETALLE ---
+    async getDetailsByOrderId(id) {
+        try {
+            // La URL base ya está en 'api', solo ponemos la ruta relativa
+            const response = await api.get(`/ordenes/${id}/detalle`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error al obtener detalles orden ${id}:`, error);
+            // Retornamos array vacío para no romper la vista si falla
+            return []; 
+        }
+    },
+
+    // --- ALARMA ---
+    async getAlarmsByOrderId(id) {
+        try {
+            const response = await api.get(`/ordenes/${id}/alarmas`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error al obtener alarmas orden ${id}:`, error);
+            return [];
+        }
+    },
 
     // Crear nueva orden
     async createOrder(orderData) {
