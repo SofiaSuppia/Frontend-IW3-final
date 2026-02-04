@@ -10,10 +10,21 @@
 
       <div v-else class="content-container">
         
-        <!-- TÍTULO -->
-        <div class="page-header mb-4">
-          <h1 class="page-title">Detalle de Orden</h1>
-          <h2 class="order-subtitle">Orden N° #{{ order?.id }}</h2>
+        <!-- TÍTULO Y BOTONES -->
+        <div class="page-header mb-4 flex justify-content-between align-items-center">
+          <div>
+            <h1 class="page-title">Detalle de Orden</h1>
+            <h2 class="order-subtitle">Orden N° #{{ order?.id }}</h2>
+          </div>
+          
+          <!-- BOTÓN DE CONCILIACIÓN (Visible siempre para probar) -->
+          <Button 
+            label="Ver Conciliación" 
+            icon="pi pi-file-pdf" 
+            class="p-button-Help p-button-raised"
+            style="background-color: #E94560; border: none;"
+            @click="$router.push(`/conciliacion/${orderId}`)"
+          />
         </div>
 
         <!-- PRIMERA FILA: TARJETAS DE INFORMACIÓN -->
@@ -200,6 +211,18 @@
             </div>
         </div>
 
+        <!-- BOTÓN: VER CONCILIACIÓN -->
+        <div class="flex justify-content-end mb-4">
+          <!-- Solo mostrar si la orden esta finalizada (estado 2) -->
+          <Button 
+              v-if="order?.estado === 2" 
+              label="Ver Conciliación" 
+              icon="pi pi-file" 
+              class="p-button-help" 
+              @click="$router.push(`/conciliacion/${orderId}`)"
+          />
+        </div>
+
       </div>
     </main>
   </div>
@@ -294,7 +317,7 @@ onMounted(() => {
 /* Info Cards Updated for density */
 .info-card { display: flex; flex-direction: column; gap: 0.6rem; } /* Reducido un poco el gap para que entre todo */
 .card-row { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.4rem; }
-.card-row:last-child { border-bottom: none; } /* Quitar borde al último */
+.card-row:last-child { border-bottom: none; /* Quitar borde al último */ }
 .info-group { display: flex; flex-direction: column; }
 .info-group label { font-size: 0.70rem; color: #aebbc7; text-transform: uppercase; margin-bottom: 2px; }
 .info-group span { font-size: 0.9rem; } /* Asegurar tamaño legible */
