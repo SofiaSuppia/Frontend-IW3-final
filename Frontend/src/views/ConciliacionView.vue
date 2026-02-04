@@ -37,14 +37,16 @@
         <section class="report-section">
           <div class="section-header">Información del Producto Cargado</div>
           <table class="report-table">
-            <tr>
-              <td class="col-label">Producto:</td>
-              <td class="col-value">{{ conciliacion?.productoNombre || 'Butano' }}</td>
-            </tr>
-            <tr>
-              <td class="col-label">Descripción:</td>
-              <td class="col-value">{{ conciliacion?.productoDescripcion || 'Componente del GLP, utilizado...' }}</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td class="col-label">Producto:</td>
+                <td class="col-value">{{ conciliacion?.productoNombre || 'Butano' }}</td>
+              </tr>
+              <tr>
+                <td class="col-label">Descripción:</td>
+                <td class="col-value">{{ conciliacion?.productoDescripcion || 'Componente del GLP, utilizado...' }}</td>
+              </tr>
+            </tbody>
           </table>
         </section>
 
@@ -52,26 +54,28 @@
         <section class="report-section">
           <div class="section-header">Datos del Pesaje</div>
           <table class="report-table">
-            <tr>
-              <td class="col-label">Pesaje inicial:</td>
-              <td class="col-value">{{ formatNumber(conciliacion?.pesajeInicial) }} kg</td>
-            </tr>
-            <tr>
-              <td class="col-label">Pesaje final:</td>
-              <td class="col-value">{{ formatNumber(conciliacion?.pesajeFinal) }} kg</td>
-            </tr>
-            <tr>
-              <td class="col-label">Producto cargado:</td>
-              <td class="col-value font-bold">{{ formatNumber(conciliacion?.productoCargado) }} kg</td>
-            </tr>
-            <tr>
-              <td class="col-label">Neto por balanza:</td>
-              <td class="col-value font-bold">{{ formatNumber(conciliacion?.netoPorBalanza) }} kg</td>
-            </tr>
-            <tr>
-              <td class="col-label">Diferencia entre balanza y caudalímetro:</td>
-              <td class="col-value">{{ formatNumber(conciliacion?.diferenciaBalanzaCaudalimetro) }} kg</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td class="col-label">Pesaje inicial:</td>
+                <td class="col-value">{{ formatNumber(conciliacion?.pesajeInicial) }} kg</td>
+              </tr>
+              <tr>
+                <td class="col-label">Pesaje final:</td>
+                <td class="col-value">{{ formatNumber(conciliacion?.pesajeFinal) }} kg</td>
+              </tr>
+              <tr>
+                <td class="col-label">Producto cargado:</td>
+                <td class="col-value font-bold">{{ formatNumber(conciliacion?.productoCargado) }} kg</td>
+              </tr>
+              <tr>
+                <td class="col-label">Neto por balanza:</td>
+                <td class="col-value font-bold">{{ formatNumber(conciliacion?.netoPorBalanza) }} kg</td>
+              </tr>
+              <tr>
+                <td class="col-label">Diferencia entre balanza y caudalímetro:</td>
+                <td class="col-value">{{ formatNumber(conciliacion?.diferenciaBalanzaCaudalimetro) }} kg</td>
+              </tr>
+            </tbody>
           </table>
         </section>
 
@@ -79,18 +83,20 @@
         <section class="report-section">
           <div class="section-header">Promedios durante la Carga</div>
           <table class="report-table">
-            <tr>
-              <td class="col-label">Promedio de temperatura:</td>
-              <td class="col-value">{{ formatNumber(conciliacion?.promedioTemperatura) }} °C</td>
-            </tr>
-            <tr>
-              <td class="col-label">Promedio de densidad:</td>
-              <td class="col-value">{{ formatNumber(conciliacion?.promedioDensidad, 3) }} kg/m³</td>
-            </tr>
-            <tr>
-              <td class="col-label">Promedio de caudal:</td>
-              <td class="col-value">{{ formatNumber(conciliacion?.promedioCaudal) }} L/h</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td class="col-label">Promedio de temperatura:</td>
+                <td class="col-value">{{ formatNumber(conciliacion?.promedioTemperatura) }} °C</td>
+              </tr>
+              <tr>
+                <td class="col-label">Promedio de densidad:</td>
+                <td class="col-value">{{ formatNumber(conciliacion?.promedioDensidad, 3) }} kg/m³</td>
+              </tr>
+              <tr>
+                <td class="col-label">Promedio de caudal:</td>
+                <td class="col-value">{{ formatNumber(conciliacion?.promedioCaudal) }} L/h</td>
+              </tr>
+            </tbody>
           </table>
         </section>
 
