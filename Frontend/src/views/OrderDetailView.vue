@@ -92,11 +92,12 @@
 
           <!-- 2. PRODUCTO -->
           <div class="card glass-panel product-card">
-            <h3 class="card-title">Producto</h3> <!-- Ajusta si tienes el nombre del producto en el objeto orden -->
+            <h3 class="card-title">{{ productInfo.nombre }}</h3> 
+            
             <div class="product-detail">
               <label>Temp. Umbral</label>
-              <!-- Aquí podrías mostrar la temperatura límite si viene en la Orden o Cisterna -->
-              <span class="temp-value">-0.5 °C</span> 
+              <!-- CAMBIO: Temperatura dinámica -->
+              <span class="temp-value">{{ productInfo.tempUmbral }} °C</span> 
             </div>
           </div>
 
@@ -310,6 +311,7 @@ const {
     formattedDetails, 
     formattedAlarms,
     activeAlarm,
+    productInfo,
     attendAlarm,
     commonChartOptions 
 } = useOrderDetails(orderId);
