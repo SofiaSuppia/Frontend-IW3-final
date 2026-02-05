@@ -8,19 +8,16 @@
       <!-- LADO IZQUIERDO: Texto de Bienvenida -->
       <div class="text-section">
         <!-- LOGO AGREGADO AQUÍ -->
-        <img src="/assets/images/logo.png" alt="FluxGas Logo" class="login-logo" />
+        <div class="logo-placeholder" style="display: flex; align-items: center; gap: 15px; margin-bottom: 1.5rem;">
+          <i class="pi pi-bolt" style="color: #E94560; font-size: 3rem;"></i>
+          <span style="font-size: 3rem; font-weight: bold; color: white;">FluxGas</span>
+        </div>
         
         <h1>Bienvenido<br>de vuelta</h1>
         <p class="description">
           Soluciones confiables en transporte y distribución de gas. 
           Conectando energía con eficiencia.
         </p>
-        <!-- Iconos decorativos -->
-        <div class="social-icons">
-          <i class="pi pi-facebook"></i>
-          <i class="pi pi-twitter"></i>
-          <i class="pi pi-instagram"></i>
-        </div>
       </div>
 
       <!-- LADO DERECHO: Formulario (Glass Card) -->
@@ -30,7 +27,7 @@
           
           <div class="input-group">
             <label for="username">Usuario</label>
-            <InputText id="username" v-model="username" class="custom-input" placeholder="admin" />
+            <InputText id="username" v-model="username" class="custom-input" autocomplete="off" />
           </div>
 
           <div class="input-group">
@@ -42,20 +39,15 @@
                 class="custom-input-password" 
                 :feedback="false" 
                 toggleMask 
-                placeholder="••••••"
                 inputClass="custom-input-inner"
+                autocomplete="off"
               />
             </div>
           </div>
 
-          <!-- Checkbox y Olvidé contraseña en la misma línea -->
-          <div class="options-row">
-            <div class="remember-me">
-              <input type="checkbox" id="remember" />
-              <label for="remember">Recordarme</label>
-            </div>
-            <span class="forgot-link" @click="handleForgotPassword">¿Olvidaste tu contraseña?</span>
+          <div class="options-row" style="display: flex; justify-content: flex-end; margin-top: 1rem; margin-bottom: 1rem;">
           </div>
+
 
           <p v-if="error" class="error-msg">{{ error }}</p>
 
