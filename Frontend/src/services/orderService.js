@@ -1,10 +1,10 @@
 import api from '../api/axios';
 
 export const orderService = {
-    // Obtener todas las órdenes
-    async getAllOrders() {
+    // Obtener todas las órdenes (paginado)
+    async getAllOrders(page = 0, size = 10) {
         try {
-            const response = await api.get('/ordenes?size=1000&page=0');
+            const response = await api.get(`/ordenes?page=${page}&size=${size}`);
             return response.data;
         } catch (error) {
             console.error("Error al obtener órdenes", error);

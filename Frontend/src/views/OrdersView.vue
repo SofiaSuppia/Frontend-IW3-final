@@ -18,12 +18,22 @@
         />
 
         <!-- Tabla de órdenes -->
-        <OrdersTable 
-          :orders="filteredOrders"
-          :loading="loading"
-          @view-details="openOrderDetails"
-          @view-conciliacion="viewConciliacion"
-        />
+        <div class="table-wrapper">
+          <OrdersTable 
+            :orders="filteredOrders"
+            :loading="loading"
+            @view-details="openOrderDetails"
+            @view-conciliacion="viewConciliacion"
+          />
+
+          <!-- Paginador -->
+          <BluePaginator
+              :first="page * pageSize"
+              :rows="pageSize"
+              :totalRecords="totalRecords"
+              @page="onPageChange"
+          />
+        </div>
 
       </div>
     </main>
@@ -38,6 +48,7 @@ import { onMounted } from 'vue';
 import Sidebar from '@/components/Sidebar.vue';
 import OrderFilters from '@/components/orders/OrderFilters.vue';
 import OrdersTable from '@/components/orders/OrdersTable.vue';
+import BluePaginator from '@/components/BluePaginator.vue';
 import Toast from 'primevue/toast';
 import { useOrders } from '@/composables/useOrders';
 import { useRouter } from 'vue-router'; 
@@ -52,6 +63,10 @@ const {
   filteredOrders,
   loading,
   activeFilter,
+  page,
+  pageSize,
+  totalRecords,
+  onPageChange,
   loadOrders,
   toggleFilter,
   viewOrderDetails,

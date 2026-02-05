@@ -1,10 +1,10 @@
 import api from '../api/axios';
 
 export default {
-    // Obtener todos los productos
-    async getAllProducts() {
+    // Obtener todos los productos (paginado)
+    async getAllProducts(page = 0, size = 10) {
         try {
-            const response = await api.get('/productos');
+            const response = await api.get(`/productos?page=${page}&size=${size}`);
             return response.data;
         } catch (error) {
             console.error("Error al obtener productos:", error);

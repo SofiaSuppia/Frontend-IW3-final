@@ -31,6 +31,11 @@ export function useUserManagement() {
   const loading = ref(false);
   const filters = ref({ role: null, type: null, status: null });
 
+  // Paginación
+  const page = ref(0);
+  const pageSize = ref(5);
+  const totalRecords = ref(0);
+
   // --- HELPERS INTERNOS ---
   const mapBackendToFrontend = (u) => {
     let roleName = 'Cli';
@@ -76,14 +81,37 @@ export function useUserManagement() {
   const loadUsers = async () => {
     loading.value = true;
     try {
-      const response = await userService.getAllUsers();
-      users.value = (response.data || []).map(mapBackendToFrontend);
+      const response = await userService.getAllUsers(page.value, pageSize.value);
+      
+      let data = [];
+      // Verificar si response.data ES el objeto Page (caso orderService)
+      // O si response.data tiene una propiedad content (caso usersService devuelve AxiosResponse)
+      
+      const responseBody = response.data || response; // Normalizar si viene envuelto o no
+
+      if (responseBody && responseBody.content) {
+         // Page object standard
+         data = responseBody.content;
+         totalRecords.value = (responseBody.totalElements !== undefined) ? responseBody.totalElements : data.length;
+      } else if (Array.isArray(responseBody)) {
+        // Fallback array
+        data = responseBody;
+        totalRecords.value = data.length;
+      }
+
+      users.value = (data || []).map(mapBackendToFrontend);
     } catch (error) {
       console.error('Error cargando usuarios:', error);
       toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar la lista.' });
     } finally {
       loading.value = false;
     }
+  };
+
+  const onPageChange = (event) => {
+    page.value = event.page;
+    pageSize.value = event.rows;
+    loadUsers();
   };
 
   const saveUser = async (formData, isUpdate) => {
@@ -131,6 +159,13 @@ export function useUserManagement() {
     loading,
     filters,
     filteredUsers,
+    
+    // Paginación
+    page,
+    pageSize,
+    totalRecords,
+    onPageChange,
+    
     loadUsers,
     saveUser,
     deleteUser

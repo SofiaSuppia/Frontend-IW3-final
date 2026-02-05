@@ -66,10 +66,16 @@ export function useOrderDetails(orderId) {
     };
 
     // --- ACCIÓN: ATENDER ALARMA (Bonus) ---
-    const attendAlarm = async (alarmaId) => {
+    const attendAlarm = async (alarmaId, observacion = '') => {
         try {
-            // Endpoint PUT /{id}/estado?estado=ATENDIDA
-            await axios.put(`${API_URL}/alarmas/${alarmaId}/estado?estado=ATENDIDA`, {}, { 
+            // Endpoint PUT /{id}/estado?estado=ATENDIDA&observacion=...
+            const params = new URLSearchParams();
+            params.append('estado', 'ATENDIDA');
+            if (observacion) {
+                params.append('observacion', observacion);
+            }
+
+            await axios.put(`${API_URL}/alarmas/${alarmaId}/estado?${params.toString()}`, {}, { 
                 headers: getAuthHeaders() 
             });
             toast.add({ severity: 'success', summary: 'Éxito', detail: 'Alarma marcada como atendida' });
@@ -180,7 +186,9 @@ export function useOrderDetails(orderId) {
             status: a.estado, // Backend: PENDIENTE | ATENDIDA
             timestamp: new Date(a.fecha).toLocaleString(),
             temp: a.temperaturaRegistrada, // Backend: temperaturaRegistrada
-            observacion: a.observacion
+            observacion: a.observacion,
+            // Intentamos obtener el nombre del auditor (ajusta según respuesta real del backend)
+            auditor: a.usuarioAuditor?.username || a.usuario?.username || null
         }));
     });
 

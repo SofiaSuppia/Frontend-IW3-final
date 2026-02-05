@@ -16,6 +16,11 @@ export function useOrders() {
   const orders = ref([]);
   const loading = ref(false);
   const activeFilter = ref(null);
+  
+  // Paginación
+  const page = ref(0);
+  const pageSize = ref(5);
+  const totalRecords = ref(0);
 
   /**
    * Órdenes filtradas según el estado activo
@@ -35,8 +40,16 @@ export function useOrders() {
       .slice(0, 6);
   });
 
+  const onPageChange = (event) => {
+    page.value = event.page;
+    pageSize.value = event.rows;
+    loadOrders();
+  };
+
   /**
    * Estadísticas de órdenes por estado
+   * NOTA: Al paginar, esto solo calcula estadísticas DE LA PÁGINA ACTUAL.
+   * Si necesitas estadísticas globales, deberías tener un endpoint dedicado en el backend.
    */
   const orderStats = computed(() => {
     const stats = orders.value.reduce((acc, order) => {
@@ -84,28 +97,26 @@ export function useOrders() {
   const loadOrders = async () => {
     loading.value = true;
     try {
-      // El servicio devuelve el array directo
-      const response = await orderService.getAllOrders();
+      // El servicio ahora acepta page/size
+      const response = await orderService.getAllOrders(page.value, pageSize.value);
       
       console.log("Datos recibidos:", response);
 
       let data = [];
 
-      // CASO 1: El backend devuelve el array directamente (Tu caso actual)
-      if (Array.isArray(response)) {
-          data = response;
-      } 
-      // CASO 2: El backend devuelve un objeto Axios con .data (Caso antiguo)
-      else if (response && Array.isArray(response.data)) {
-          data = response.data;
-      }
-      // CASO 3: Paginación de Spring Boot dentro de .content
-      else if (response && response.content && Array.isArray(response.content)) {
+      // Detectar formato de respuesta para Paginación de Spring
+      if (response && response.content) {
           data = response.content;
-      }
-      // CASO 4: Paginación dentro de .data.content
-      else if (response && response.data && response.data.content) {
+          // Robustez: si totalElements no viene, usar data.length
+          totalRecords.value = (response.totalElements !== undefined) ? response.totalElements : data.length;
+      } else if (response && response.data && response.data.content) {
+          // Caso raro de envoltura extra
           data = response.data.content;
+          totalRecords.value = (response.data.totalElements !== undefined) ? response.data.totalElements : data.length;
+      } else if (Array.isArray(response)) {
+          // Fallback por si el backend no pagina
+          data = response;
+          totalRecords.value = response.length;
       }
 
       console.log(`Total procesado: ${data.length}`);
@@ -176,6 +187,12 @@ export function useOrders() {
     recentOrders,
     orderStats,
     
+    // Paginación
+    page,
+    pageSize,
+    totalRecords,
+    onPageChange,
+
     // Métodos
     loadOrders,
     toggleFilter,

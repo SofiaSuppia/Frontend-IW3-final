@@ -58,6 +58,15 @@
               </template>
             </Column>
           </DataTable>
+
+          <!-- Paginador -->
+          <BluePaginator 
+             :first="page * pageSize" 
+             :rows="pageSize" 
+             :totalRecords="totalRecords" 
+             @page="onPageChange" 
+          />
+
         </section>
 
       </div>
@@ -112,6 +121,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import Sidebar from '../components/Sidebar.vue';
 import ProductForm from '../components/ProductForm.vue';
+import BluePaginator from '../components/BluePaginator.vue';
 import { useProducts } from '../composables/useProducts';
 import { DIALOG_TITLES, EMPTY_TABLE_MESSAGE, INITIAL_PRODUCT } from '../constants/productConstants';
 
@@ -140,7 +150,11 @@ const {
   createProduct, 
   updateProduct, 
   deleteProduct,
-  clearFormErrors
+  clearFormErrors,
+  page,
+  pageSize,
+  totalRecords,
+  onPageChange
 } = useProducts();
 
 // Menú contextual
@@ -267,16 +281,9 @@ const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFix
 }
 
 /* Paginador con fondo transparente */
-:deep(.p-paginator) { 
-  background: transparent !important; /* ← Fondo transparente */
-  border-top: 1px solid rgba(255, 255, 255, 0.1); 
-  border-bottom: none !important;
-  border-left: none !important;
-  border-right: none !important;
-  padding: 1rem; 
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
+/* CSS Cleanup for Paginator - Removing old overrides that conflict with BluePaginator */
+:deep(.products-table .p-paginator) {
+  display: none !important; /* Hide built-in datatable paginator if active */
 }
 
 /* Botones de navegación (<<, <, >, >>) */
@@ -306,16 +313,10 @@ const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFix
   gap: 0.25rem;
 }
 
-:deep(.p-paginator .p-paginator-page) { 
-  color: #aebbc7 !important; 
-  min-width: 2.5rem; 
-  height: 2.5rem; 
-  border-radius: 50% !important;
-  background: transparent !important;
-  border: none !important;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
+/* 
+ * BluePaginator maneja sus propios estilos.
+ * Eliminamos cualquier regla que oculte o deforme los botones.
+ */
 
 :deep(.p-paginator .p-paginator-page:hover) { 
   background: rgba(255, 255, 255, 0.1) !important; 

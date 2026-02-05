@@ -109,7 +109,7 @@
                   <small>{{ new Date(activeAlarm.fecha).toLocaleString() }}</small>
               </p>
               <div class="alert-actions">
-                <span class="action-link confirm" @click="handleAttend(activeAlarm.id)">CONFIRMAR / ATENDER</span>
+                <span class="action-link confirm" @click="openAttendDialog(activeAlarm)">CONFIRMAR / ATENDER</span>
               </div>
             </div>
           </div>
@@ -162,7 +162,10 @@
               responsiveLayout="scroll" 
               scrollable 
               scrollHeight="200px"
+              v-model:expandedRows="expandedRows" 
+              dataKey="id"
             >
+              <Column expander style="width: 3rem" />
               <Column field="id" header="ID"></Column>
               <Column field="status" header="Estado">
                  <template #body="{ data }">
@@ -171,6 +174,30 @@
               </Column>
               <Column field="timestamp" header="Hora"></Column>
               <Column field="temp" header="Temp (°C)"></Column>
+              <Column header="Acción">
+                 <template #body="{ data }">
+                    <Button 
+                        v-if="data.status === 'PENDIENTE'" 
+                        label="Atender" 
+                        icon="pi pi-check-square"
+                        class="p-button-xs p-button-warning p-button-outlined" 
+                        style="height: 2rem; font-size: 0.8rem;"
+                        @click="openAttendDialog(data)" 
+                    />
+                 </template>
+              </Column>
+
+              <template #expansion="{ data }">
+                  <div class="p-3" style="background: rgba(255,255,255,0.05); border-radius: 8px;">
+                      <h4 class="text-white text-sm mb-2">Detalles de atención</h4>
+                      <p v-if="data.observacion"><strong>Observación:</strong> {{ data.observacion }}</p>
+                      <p v-else class="text-gray-400 font-italic">Sin observaciones.</p>
+                      
+                      <p v-if="data.auditor" class="mt-2 text-xs text-gray-400">
+                          Atendido por: <span class="text-white">{{ data.auditor }}</span>
+                      </p>
+                  </div>
+              </template>
             </DataTable>
           </div>
         </div>
@@ -223,6 +250,32 @@
           />
         </div>
 
+        <!-- DIALOGO DE ATENCION DE ALARMA -->
+        <Dialog 
+            v-model:visible="showAlarmDialog" 
+            header="Atender Alarma" 
+            :modal="true" 
+            :draggable="false"
+            :style="{ width: '400px' }"
+            class="custom-dialog-dark"
+        >
+            <div class="field">
+                <label for="observation" class="block mb-2 text-white">Observación (Opcional)</label>
+                <Textarea 
+                    id="observation" 
+                    v-model="alarmObservation" 
+                    rows="4" 
+                    class="w-full bg-bluegray-900 text-white" 
+                    placeholder="Ingrese detalles de la acción tomada..."
+                    autoResize 
+                />
+            </div>
+            <template #footer>
+                <Button label="Cancelar" icon="pi pi-times" class="p-button-text text-white" @click="showAlarmDialog = false" />
+                <Button label="Confirmar" icon="pi pi-check" class="p-button-success" @click="confirmAttendAlarm" />
+            </template>
+        </Dialog>
+
       </div>
     </main>
   </div>
@@ -237,6 +290,8 @@ import Chart from 'primevue/chart';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import Textarea from 'primevue/textarea';
 
 const route = useRoute();
 const orderId = route.params.id; // Tomamos ID de la URL
@@ -263,15 +318,34 @@ const donutOptions = {
     plugins: { legend: { display: false }, tooltip: { enabled: false } }
 };
 
+// --- DIALOGO ALARMA ---
+const showAlarmDialog = ref(false);
+const selectedAlarmId = ref(null);
+const alarmObservation = ref('');
+
+const openAttendDialog = (alarm) => {
+    selectedAlarmId.value = alarm.id;
+    alarmObservation.value = '';
+    showAlarmDialog.value = true;
+};
+
+const confirmAttendAlarm = async () => {
+    if (selectedAlarmId.value) {
+        await attendAlarm(selectedAlarmId.value, alarmObservation.value);
+        showAlarmDialog.value = false;
+    }
+};
+
 // Datos estáticos para ETA (ya que no lo calculamos en backend aún)
 const etaData = ref({
     labels: ['Transcurrido', 'Restante'],
     datasets: [{ data: [40, 60], backgroundColor: ['#ab47bc', 'rgba(255,255,255,0.1)'], borderWidth: 0, cutout: '85%' }]
 });
 
-const handleAttend = (id) => {
-    attendAlarm(id);
-};
+// --- ELIMINADO handleAttend antiguo ---
+
+
+const expandedRows = ref({}); // Para funcionalidad de expandir fila
 
 // NUEVO: Función auxiliar para formatear fechas
 const formatDate = (dateString) => {

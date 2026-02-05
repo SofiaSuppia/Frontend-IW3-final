@@ -30,7 +30,14 @@
 
         <!-- TABLA -->
         <div class="table-wrapper">
-          <DataTable :value="filteredUsers" class="users-table" responsiveLayout="scroll" :loading="loading">
+          <DataTable 
+             :value="filteredUsers" 
+             class="users-table" 
+             responsiveLayout="scroll" 
+             :loading="loading"
+             scrollable 
+             scrollHeight="calc(100vh - 480px)"
+          >
             <Column field="id" header="ID" style="width: 50px"></Column>
             <Column field="username" header="Usuario">
               <template #body="{ data }">
@@ -65,6 +72,14 @@
             </Column>
           </DataTable>
           <div v-if="!loading && filteredUsers.length === 0" class="text-center p-4" style="color: #aebbc7;">No hay usuarios para mostrar.</div>
+        
+          <!-- Paginador DENTRO del wrapper para evitar scroll externo -->
+          <BluePaginator 
+             :first="page * pageSize" 
+             :rows="pageSize" 
+             :totalRecords="totalRecords" 
+             @page="onPageChange" 
+          />
         </div>
       </div>
     </main>
@@ -90,9 +105,22 @@ import Tag from 'primevue/tag';
 import Menu from 'primevue/menu';
 import Toast from 'primevue/toast';
 import Dropdown from 'primevue/dropdown';
+import BluePaginator from '@/components/BluePaginator.vue';
 
 // --- LOGICA DE NEGOCIO (Composable) ---
-const { users, loading, filters, filteredUsers, loadUsers, saveUser, deleteUser } = useUserManagement();
+const { 
+    users, 
+    loading, 
+    filters, 
+    filteredUsers, 
+    page, 
+    pageSize, 
+    totalRecords, 
+    onPageChange,
+    loadUsers, 
+    saveUser, 
+    deleteUser 
+} = useUserManagement();
 
 // Configuración Visual para Dropdowns de Filtro -> Importada del Composable
 const roleOptions = Object.keys(CONFIG_ROLES);
@@ -143,17 +171,17 @@ onMounted(loadUsers);
 <style scoped>
 /* --- SOLO ESTILOS DE LAYOUT Y TABLA (Específicos de la Vista) --- */
 .dashboard-layout { display: flex; height: 100vh; width: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; background-color: #16213E; }
-.main-content { flex: 1; background: linear-gradient(rgba(22, 33, 62, 0.6), rgba(22, 33, 62, 0.75)), url('/assets/images/fondoCompleto.png') no-repeat center center; background-size: cover; background-attachment: fixed; padding: 2rem; overflow-y: auto; }
+.main-content { flex: 1; background: linear-gradient(rgba(22, 33, 62, 0.6), rgba(22, 33, 62, 0.75)), url('/assets/images/fondoCompleto.png') no-repeat center center; background-size: cover; background-attachment: fixed; padding: 1.5rem; overflow-y: auto; }
 .content-container { max-width: 1400px; margin: 0 auto; }
 
 /* HEADER */
-.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 .page-title { color: #F1F6F9; font-size: 2rem; margin: 0; font-weight: 600; }
 .add-user-btn { background-color: #4361ee !important; border: none !important; font-weight: 700 !important; font-size: 0.85rem !important; padding: 0.7rem 1.5rem !important; border-radius: 6px !important; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(67, 97, 238, 0.4); transition: transform 0.2s, box-shadow 0.2s; display: flex !important; gap: 12px !important;}
 .add-user-btn:hover { background-color: #3a56d4 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(67, 97, 238, 0.5); }
 
 /* FILTROS */
-.filters-panel { display: flex; gap: 2rem; padding: 1.5rem; margin-bottom: 2rem; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); align-items: flex-end; }
+.filters-panel { display: flex; gap: 2rem; padding: 1.5rem; margin-bottom: 1rem; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); align-items: flex-end; }
 .filter-item { flex: 1; }
 .filter-label { display: block; color: #F1F6F9; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; margin-left: 4px; letter-spacing: 0.5px; }
 
@@ -168,9 +196,9 @@ onMounted(loadUsers);
 :deep(.users-table) { background: transparent !important; }
 :deep(.p-tag .p-tag-icon) { margin-right: 0.5rem !important; }
 :deep(.users-table .p-datatable-wrapper) { background: transparent !important; }
-:deep(.users-table .p-datatable-header), :deep(.users-table .p-datatable-thead > tr > th) { background: transparent !important; color: #aebbc7 !important; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; border-top: none !important; border-left: none !important; border-right: none !important; padding: 1.5rem 1rem; }
+:deep(.users-table .p-datatable-header), :deep(.users-table .p-datatable-thead > tr > th) { background: transparent !important; color: #aebbc7 !important; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; border-top: none !important; border-left: none !important; border-right: none !important; padding: 1rem 1rem; }
 :deep(.users-table .p-datatable-tbody > tr) { background: transparent !important; color: #F1F6F9 !important; transition: background 0.2s ease; }
-:deep(.users-table .p-datatable-tbody > tr > td) { background: transparent !important; color: #F1F6F9 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; border-top: none !important; border-left: none !important; border-right: none !important; padding: 1.5rem 1rem; }
+:deep(.users-table .p-datatable-tbody > tr > td) { background: transparent !important; color: #F1F6F9 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; border-top: none !important; border-left: none !important; border-right: none !important; padding: 0.75rem 1rem; }
 :deep(.users-table .p-datatable-tbody > tr:hover) { background: rgba(255, 255, 255, 0.1) !important; }
 :deep(.users-table .p-datatable-footer), :deep(.users-table .p-paginator) { background: transparent !important; color: #F1F6F9 !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; border-bottom: none !important; border-left: none !important; border-right: none !important; padding: 1rem; }
 .user-cell { display: flex; align-items: center; gap: 10px; }

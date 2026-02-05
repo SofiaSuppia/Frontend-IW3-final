@@ -4,9 +4,9 @@ import api from '../api/axios';
 const ENDPOINT = '/usuarios'; 
 
 export const userService = {
-  // Obtener todos los usuarios
-  getAllUsers() {
-    return api.get(ENDPOINT);
+  // Obtener todos los usuarios (paginado)
+  getAllUsers(page = 0, size = 10) {
+    return api.get(`${ENDPOINT}?page=${page}&size=${size}`);
   },
 
   // Obtener usuario por ID

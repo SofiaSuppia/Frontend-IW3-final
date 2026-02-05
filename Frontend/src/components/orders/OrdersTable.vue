@@ -13,7 +13,7 @@
       class="orders-table"
       responsiveLayout="scroll"
       scrollable
-      scrollHeight="700px" 
+      scrollHeight="600px" 
       emptyMessage="No hay órdenes registradas"
     >
       <!-- NUEVO: Columna ID -->

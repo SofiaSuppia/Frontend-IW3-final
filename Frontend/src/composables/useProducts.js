@@ -19,6 +19,12 @@ export function useProducts() {
   const isSaving = ref(false);
   const products = ref([]);
   const selectedProduct = ref(null);
+  
+  // Paginación
+  const page = ref(0);
+  const pageSize = ref(5);
+  const totalRecords = ref(0);
+
   const formErrors = ref({
     nombre: '',
     thresholdTemp: '',
@@ -32,7 +38,17 @@ export function useProducts() {
   const loadProducts = async () => {
     loading.value = true;
     try {
-      const data = await productService.getAllProducts();
+      const response = await productService.getAllProducts(page.value, pageSize.value);
+      
+      let data = [];
+      if (response && response.content) {
+          data = response.content;
+          totalRecords.value = response.totalElements || 0;
+      } else if (Array.isArray(response)) {
+          data = response;
+          totalRecords.value = response.length;
+      }
+
       products.value = data;
       console.log('✅ Productos cargados:', products.value.length);
     } catch (error) {
@@ -41,6 +57,12 @@ export function useProducts() {
     } finally {
       loading.value = false;
     }
+  };
+
+  const onPageChange = (event) => {
+    page.value = event.page;
+    pageSize.value = event.rows;
+    loadProducts();
   };
 
   const createProduct = async (product) => {
@@ -173,6 +195,13 @@ export function useProducts() {
     createProduct,
     updateProduct,
     deleteProduct,
+    
+    // Paginación
+    page,
+    pageSize,
+    totalRecords,
+    onPageChange,
+    
     clearFormErrors
   };
 }
