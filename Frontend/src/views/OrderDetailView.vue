@@ -10,6 +10,14 @@
 
       <div v-else class="content-container">
         
+        <!-- CAMBIO: Botón Volver movido AQUÍ (Arriba del título) -->
+        <div class="mb-2 print-hide">
+          <Button class="p-button-text text-white p-0" @click="goBack">
+            <i class="pi pi-arrow-left" style="margin-right: 8px;"></i>
+            Volver
+          </Button>
+        </div>
+
         <!-- TÍTULO Y BOTONES -->
         <div class="page-header">
           <div>
@@ -286,7 +294,8 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+//import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'; 
 import { useOrderDetails } from '../composables/useOrderDetails';
 import Sidebar from '../components/Sidebar.vue';
 import Chart from 'primevue/chart';
@@ -296,8 +305,16 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import Textarea from 'primevue/textarea';
 
+
 const route = useRoute();
-const orderId = route.params.id; // Tomamos ID de la URL
+
+const router = useRouter(); 
+const orderId = route.params.id;
+
+const goBack = () => {
+    // 3. Ahora esto funcionará
+    router.push('/orders');
+};
 
 // Usamos el composable
 const { 
