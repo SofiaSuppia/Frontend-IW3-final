@@ -456,6 +456,37 @@ export function useOrderDetails(orderId) {
             toast.add({ severity: 'error', summary: 'Error', detail: 'Falló actualización' });
         }
     };
+    // --- NUEVO: Información del Producto ---
+    const productInfo = computed(() => {
+        const o = order.value || {};
+        
+        // 1. Buscar objeto Producto
+        const prod = (o.detalleOrden && o.detalleOrden.producto) || 
+                     o.producto || 
+                     (o.camion && o.camion.cisterna ? o.camion.cisterna.producto : {}) || 
+                     {};
+
+        // 2. Buscar objeto Cisterna (A veces el límite está en el tanque, no en el producto)
+        const cisterna = (o.camion && o.camion.cisterna) || {};
+
+        console.log("DEBUG PRODUCTO:", prod); // Mira la consola (F12) para ver las claves reales
+        console.log("DEBUG CISTERNA:", cisterna);
+
+        // 3. Buscar el valor de temperatura (Prioridad: Producto -> Cisterna -> 0)
+        // Probamos todas las variantes posibles de nombre
+        const val = prod.temperaturaLimite || 
+                    prod.tempLimite || 
+                    prod.limitTemperature ||
+                    prod.umbralTemperatura ||
+                    cisterna.temperaturaLimite || // Límite físico del tanque
+                    cisterna.tempLimite ||
+                    0;
+
+        return {
+            nombre: prod.nombre || prod.nombre || prod.name || 'Sin especificar',
+            tempUmbral: Number(val) // Convertimos a número por si viene como string "35.4"
+        };
+    });
 
     return {
         order,
@@ -471,6 +502,9 @@ export function useOrderDetails(orderId) {
         calculatedEta, 
         elapsedTime,   
         etaData,       
+        activeAlarm, // Nuevo
+        productInfo, // Nuevo
+        attendAlarm, // Nuevo
         commonChartOptions,
         fetchAllData,
         startPolling: startUpdates, // Exponemos con el nombre compatible

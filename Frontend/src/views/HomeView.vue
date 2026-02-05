@@ -30,7 +30,7 @@
             :orders="recentOrders"
             :loading="loading"
             @view-all="navigateTo('/orders')"
-            @view-details="viewOrderDetails"
+            @view-details="handleViewDetails"
           />
         </template>
 
@@ -68,7 +68,8 @@ const {
   loading, 
   startPolling,
   stopPolling,
-  viewOrderDetails
+  viewOrderDetails,
+  loadOrders
 } = useOrders();
 
 // Composable específico del home
@@ -80,6 +81,12 @@ const { kpiCards } = useHomeData(orderStats);
  */
 const navigateTo = (route) => {
   router.push(route); 
+};
+
+const handleViewDetails = (order) => {
+  const orderId = order.id || order; 
+  console.log("Navegando a detalle de orden:", orderId);
+  router.push(`/orders/${orderId}`);
 };
 
 /**
