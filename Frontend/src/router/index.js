@@ -25,9 +25,40 @@ const router = createRouter({
       component: OrdersView,
       meta: { requiresAuth: true } // Esta etiqueta protege la ruta
     },
-    { path: '/users', 
-      component: UsersView, 
-      meta: { requiresAuth: true } 
+    {
+      path: '/users',
+      name: 'users',
+      component: () => import('../views/UsersView.vue'),
+      beforeEnter: (to, from, next) => {
+        // Obtenemos el rol. Puede venir del localStorage o decodificando el token si es necesario
+        // Asumimos que guardaste 'role' o usamos la lógica del token
+        let role = localStorage.getItem('role'); 
+        
+        // Si no hay rol explícito, intentamos leerlo del token (backup de seguridad)
+        if (!role) {
+            const token = localStorage.getItem('token');
+            if (token) {
+                 try {
+                    const base64Url = token.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                    const decoded = JSON.parse(jsonPayload);
+                    // Buscamos ROLE_ADMIN en roles o authorities
+                    const roles = decoded.roles || decoded.authorities || [];
+                    const roleString = JSON.stringify(roles).toUpperCase();
+                    if (roleString.includes('ADMIN')) role = 'ADMIN';
+                 } catch (e) {}
+            }
+        }
+
+        // CORRECCIÓN AQUÍ: Comparamos mayúscula contra mayúscula
+        if (role && role.toUpperCase().includes('ADMIN')) {
+          next(); 
+        } else {
+          console.warn('Acceso denegado: Rol detectado ->', role);
+          next('/home'); 
+        }
+      }
     },
     { path: '/products', 
       component: ProductsView, 

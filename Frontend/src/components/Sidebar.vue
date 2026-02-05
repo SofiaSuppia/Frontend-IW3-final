@@ -1,5 +1,5 @@
 <template>
-  <aside class="sidebar">
+  <aside class="sidebar print-hide">
     <div class="brand">
       <!-- HEMOS COMENTADO LA IMAGEN QUE DA ERROR -->
       <!-- <img src="@/assets/images/logo.png" alt="FluxGas Logo" class="sidebar-logo" /> -->
@@ -10,7 +10,7 @@
         <span style="font-size: 1.8rem; font-weight: bold; color: white;">FluxGas</span>
       </div>
     </div>
-    <nav class="nav-menu">
+    <nav class="sidebar-nav">
       <ul>
         <li 
           class="nav-item" 
@@ -33,7 +33,7 @@
         >
           <span class="icon">🛢️</span> <span>Productos</span>
         </li>
-        <li 
+        <li v-if="isAdmin" 
           class="nav-item" 
           :class="{ active: activePage === 'users' }" 
           @click="navigateTo('/users')"
@@ -74,6 +74,7 @@ const router = useRouter();
 
 const username = ref('Usuario');
 const userRole = ref('Invitado');
+const isAdmin = ref(false);
 
 // Decodificador de JWT seguro
 const parseJwt = (token) => {
@@ -97,20 +98,33 @@ onMounted(() => {
         if (token) {
             const decoded = parseJwt(token);
             if (decoded) {
-                // Nombre de usuario (sub)
+                // 1. Nombre de usuario
                 username.value = decoded.sub || localStorage.getItem('username') || 'Usuario';
                 
-                // Roles (Spring Security suele enviarlos como 'roles' o 'authorities')
-                if (decoded.roles && Array.isArray(decoded.roles) && decoded.roles.length > 0) {
-                    userRole.value = decoded.roles[0].replace('ROLE_', '');
+                // 2. Detectar Rol desde el Token
+                let detectedRole = '';
+                
+                if (decoded.roles && Array.isArray(decoded.roles)) {
+                    // Caso 1: Array de strings o objetos
+                    const r = decoded.roles[0];
+                    detectedRole = (r.name || r).toString();
                 } else if (decoded.authorities && Array.isArray(decoded.authorities)) {
-                     // A veces viene como objeto [{authority: 'ROLE_ADMIN'}]
+                     // Caso 2: Authorities
                      const auth = decoded.authorities[0];
-                     if (typeof auth === 'string') {
-                        userRole.value = auth.replace('ROLE_', '');
-                     } else if (auth && auth.authority) {
-                        userRole.value = auth.authority.replace('ROLE_', '');
-                     }
+                     detectedRole = (auth.authority || auth).toString();
+                }
+
+                // Limpiamos el string (ej: ROLE_ADMIN -> ADMIN)
+                userRole.value = detectedRole.replace('ROLE_', '');
+
+                // 3. SETEAR isAdmin BASADO EN EL TOKEN (Más seguro)
+                if (userRole.value.toUpperCase() === 'ADMIN') {
+                    isAdmin.value = true;
+                    // Guardamos en localStorage para que el Router lo vea fácil
+                    localStorage.setItem('role', 'ADMIN'); 
+                } else {
+                    isAdmin.value = false;
+                    localStorage.setItem('role', userRole.value);
                 }
             }
         }
@@ -165,7 +179,15 @@ const navigateTo = (route) => {
   object-fit: contain; 
 }
 
-.nav-menu ul { list-style: none; padding: 0; margin: 0; }
+.sidebar-nav {
+  flex-grow: 1;
+}
+
+.sidebar-nav ul { 
+  list-style: none; 
+  padding: 0; 
+  margin: 0; 
+}
 
 .nav-item { 
   display: flex; align-items: center; gap: 12px; 
@@ -174,13 +196,26 @@ const navigateTo = (route) => {
   transition: all 0.3s ease; color: #aebbc7; font-weight: 500; 
 }
 
-.nav-item:hover { background-color: rgba(255, 255, 255, 0.05); color: #F1F6F9; }
+.nav-item:hover { 
+  background-color: rgba(255, 255, 255, 0.05); 
+  color: #F1F6F9; 
+}
 
-.nav-item.active { background-color: #E94560; color: white; box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3); }
+.nav-item.active { 
+  background-color: #E94560; 
+  color: white; 
+  box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3); 
+}
 
-.icon { font-size: 1.1rem; }
+.icon { 
+  font-size: 1.1rem; 
+}
 
-.bottom-section { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; }
+.bottom-section { 
+  margin-top: auto; 
+  border-top: 1px solid rgba(255,255,255,0.1); 
+  padding-top: 1rem; 
+}
 
 .user-profile { 
   display: flex; align-items: center; gap: 12px; 
@@ -196,9 +231,26 @@ const navigateTo = (route) => {
   text-transform: uppercase; 
 }
 
-.user-info { display: flex; flex-direction: column; }
-.user-name { font-size: 0.95rem; font-weight: bold; color: #F1F6F9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
-.user-role { font-size: 0.75rem; color: #aebbc7; text-transform: capitalize; }
+.user-info { 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.user-name { 
+  font-size: 0.95rem; 
+  font-weight: bold; 
+  color: #F1F6F9; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  max-width: 140px; 
+}
+
+.user-role { 
+  font-size: 0.75rem; 
+  color: #aebbc7; 
+  text-transform: capitalize; 
+}
 
 .logout-wrapper { 
   display: flex; align-items: center; gap: 10px; 
@@ -206,5 +258,8 @@ const navigateTo = (route) => {
   transition: 0.3s; border-radius: 6px; 
 }
 
-.logout-wrapper:hover { color: #E94560; background-color: rgba(233, 69, 96, 0.1); }
+.logout-wrapper:hover { 
+  color: #E94560; 
+  background-color: rgba(233, 69, 96, 0.1); 
+}
 </style>
