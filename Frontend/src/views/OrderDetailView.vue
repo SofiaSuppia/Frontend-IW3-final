@@ -326,9 +326,6 @@
 
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { onMounted, ref } from 'vue';
-//import { useRoute } from 'vue-router';
 import { useRoute, useRouter } from 'vue-router'; 
 import { useOrderDetails } from '../composables/useOrderDetails';
 import Sidebar from '../components/Sidebar.vue';
