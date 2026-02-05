@@ -36,7 +36,7 @@
             <!-- Fila 1: Cliente y Camión -->
             <div class="card-row">
               <div class="info-group">
-                <label>Cliente:</label> <span>{{ order?.camion?.cisterna?.cliente?.razonSocial || 'Cliente' }}</span>
+                <label>Cliente:</label> <span>{{ order?.cliente?.razonSocial || order?.cliente?.nombre || order?.camion?.cisterna?.cliente?.razonSocial || 'Sin Nombre' }}</span>
               </div>
               <div class="info-group">
                 <label>Camión:</label> <span>{{ order?.camion?.patente || 'N/A' }}</span>
