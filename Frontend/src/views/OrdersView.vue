@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import Sidebar from '@/components/Sidebar.vue';
 import OrderFilters from '@/components/orders/OrderFilters.vue';
 import OrdersTable from '@/components/orders/OrdersTable.vue';
@@ -67,7 +67,8 @@ const {
   pageSize,
   totalRecords,
   onPageChange,
-  loadOrders,
+  startPolling,
+  stopPolling,
   toggleFilter,
   viewOrderDetails,
   viewConciliacion
@@ -80,7 +81,11 @@ const openOrderDetails = (orderData) => {
 
 // Cargar órdenes al montar el componente
 onMounted(() => {
-  loadOrders();
+  startPolling(10000); // 10s para listado general
+});
+
+onUnmounted(() => {
+  stopPolling();
 });
 </script>
 

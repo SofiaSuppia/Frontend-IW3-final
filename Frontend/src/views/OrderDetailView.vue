@@ -10,22 +10,7 @@
 
       <div v-else class="content-container">
         
-        <!-- TÍTULO Y BOTONES -->
-        <div class="page-header mb-4 flex justify-content-between align-items-center">
-          <div>
-            <h1 class="page-title">Detalle de Orden</h1>
-            <h2 class="order-subtitle">Orden N° #{{ order?.id }}</h2>
-          </div>
-          
-          <!-- BOTÓN DE CONCILIACIÓN (Visible siempre para probar) -->
-          <Button 
-            label="Ver Conciliación" 
-            icon="pi pi-file-pdf" 
-            class="p-button-Help p-button-raised"
-            style="background-color: #E94560; border: none;"
-            @click="$router.push(`/conciliacion/${orderId}`)"
-          />
-        </div>
+        <!-- DIAGNÓSTICO RETIRADO: Panel Rojo Eliminado -->
 
         <!-- PRIMERA FILA: TARJETAS DE INFORMACIÓN -->
         <div class="grid-layout row-spacing mb-4">
@@ -50,8 +35,8 @@
               </div>
               <div class="info-group">
                 <label>Estado:</label> 
-                <span :class="order?.estado === 2 ? 'text-green-400' : 'text-blue-400'">
-                    {{ order?.estado === 2 ? 'Cargada' : 'En Proceso' }}
+                <span :class="order?.estado === 'FINALIZADA' ? 'text-green-400' : 'text-blue-400'">
+                    {{ order?.estado === 'FINALIZADA' ? 'Cargada' : 'En Proceso' }}
                 </span>
               </div>
             </div>
@@ -139,15 +124,21 @@
             </div>
           </div>
 
-          <!-- ETA (Placeholder) -->
+          <!-- ETA (Dinámico) -->
           <div class="card glass-panel chart-card centered">
             <h3 class="card-title-sm">Tiempo estimado</h3>
             <div class="chart-wrapper">
                <Chart type="doughnut" :data="etaData" :options="donutOptions" class="w-full h-full" />
-               <div class="donut-inner">
-                 <span class="eta-label">ETA</span>
-                 <span class="eta-value">--</span>
-               </div>
+            </div>
+            <!-- ETA Value Moved Outside -->
+             <div class="mt-2 text-center">
+                 <span class="eta-value block font-bold" style="color: #ab47bc; font-size: 1.2rem;">{{ calculatedEta.text }}</span>
+             </div>
+
+            <!-- Subtítulo de Tiempo Transcurrido (Requisito) -->
+            <div class="mt-3 text-center">
+                <span class="text-xs text-gray-400 uppercase">Tiempo Transcurrido</span>
+                <div class="text-white font-bold text-lg font-mono">{{ elapsedTime }}</div>
             </div>
           </div>
 
@@ -155,7 +146,7 @@
           <div class="card glass-panel alarm-table-card">
             <h3 class="card-title-sm">Historial de Alarmas</h3>
             
-            <!-- CAMBIO: Quitamos 'paginator' y ':rows'. Agregamos scrollHeight para mantener el tamaño -->
+            <!-- CAMBIO: Restaurado v-model:expandedRows para asegurar reactividad de PrimeVue -->
             <DataTable 
               :value="formattedAlarms" 
               class="compact-table" 
@@ -165,8 +156,11 @@
               v-model:expandedRows="expandedRows" 
               dataKey="id"
             >
-              <Column expander style="width: 3rem" />
-              <Column field="id" header="ID"></Column>
+              <!-- Flecha de expansión OFICIAL de PrimeVue al principio (funciona siempre) -->
+              <Column expander style="width: 3rem"></Column>
+
+              <!-- Columns -->
+              <Column field="id" header="ID" style="width: 3rem"></Column>
               <Column field="status" header="Estado">
                  <template #body="{ data }">
                     <span :class="data.status === 'PENDIENTE' ? 'status-warning' : 'status-ok'">{{ data.status }}</span>
@@ -174,28 +168,47 @@
               </Column>
               <Column field="timestamp" header="Hora"></Column>
               <Column field="temp" header="Temp (°C)"></Column>
-              <Column header="Acción">
+              
+              <!-- Columna de Acciones para ATENDER (Solicitud del usuario) -->
+              <Column header="Acción" style="width: 5rem; text-align: center;">
                  <template #body="{ data }">
                     <Button 
                         v-if="data.status === 'PENDIENTE'" 
-                        label="Atender" 
-                        icon="pi pi-check-square"
-                        class="p-button-xs p-button-warning p-button-outlined" 
-                        style="height: 2rem; font-size: 0.8rem;"
+                        icon="pi pi-exclamation-triangle"
+                        class="p-button-rounded p-button-warning p-button-text action-icon-btn" 
+                        v-tooltip.top="'Atender Alarma'"
                         @click="openAttendDialog(data)" 
                     />
                  </template>
               </Column>
 
               <template #expansion="{ data }">
-                  <div class="p-3" style="background: rgba(255,255,255,0.05); border-radius: 8px;">
-                      <h4 class="text-white text-sm mb-2">Detalles de atención</h4>
-                      <p v-if="data.observacion"><strong>Observación:</strong> {{ data.observacion }}</p>
-                      <p v-else class="text-gray-400 font-italic">Sin observaciones.</p>
-                      
-                      <p v-if="data.auditor" class="mt-2 text-xs text-gray-400">
-                          Atendido por: <span class="text-white">{{ data.auditor }}</span>
-                      </p>
+                  <div class="p-3 m-2 border-round surface-overlay border-1 border-white-alpha-10" style="background-color: rgba(255, 255, 255, 0.02)">
+                      <div class="flex flex-column gap-2">
+                        <!-- Título de sección -->
+                        <div class="flex align-items-center text-primary-400 mb-1">
+                            <i class="pi pi-file-edit mr-2"></i>
+                            <span class="font-bold text-sm uppercase spacing-1">Detalle de la Observación</span>
+                        </div>
+
+                        <!-- Contenido de la observación -->
+                        <div class="p-3 border-round bg-bluegray-900 border-left-3 border-primary-500">
+                             <p v-if="data.observacion" class="m-0 text-white line-height-3" style="font-size: 0.95rem;">
+                                {{ data.observacion }}
+                             </p>
+                             <p v-else class="m-0 text-gray-500 font-italic text-sm">
+                                <i class="pi pi-info-circle mr-1"></i> No se han registrado observaciones para este evento.
+                             </p>
+                        </div>
+                        
+                        <!-- Pie de detalles (Auditor) -->
+                        <div v-if="data.auditor" class="flex justify-content-end mt-1">
+                            <div class="px-3 py-1 border-round-pill bg-bluegray-800 text-xs border-1 border-white-alpha-10">
+                                <span class="text-gray-400 mr-1">Auditado por:</span>
+                                <span class="text-blue-300 font-bold">{{ data.auditor }}</span>
+                            </div>
+                        </div>
+                      </div>
                   </div>
               </template>
             </DataTable>
@@ -240,9 +253,9 @@
 
         <!-- BOTÓN: VER CONCILIACIÓN -->
         <div class="flex justify-content-end mb-4">
-          <!-- Solo mostrar si la orden esta finalizada (estado 2) -->
+          <!-- Solo mostrar si la orden esta finalizada (estado 'FINALIZADA') -->
           <Button 
-              v-if="order?.estado === 2" 
+              v-if="order?.estado === 'FINALIZADA'" 
               label="Ver Conciliación" 
               icon="pi pi-file" 
               class="p-button-help" 
@@ -282,7 +295,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useOrderDetails } from '../composables/useOrderDetails';
 import Sidebar from '../components/Sidebar.vue';
@@ -300,7 +313,8 @@ const orderId = route.params.id; // Tomamos ID de la URL
 const { 
     order, 
     loading, 
-    fetchAllData, 
+    startPolling,
+    stopPolling, 
     caudalData, 
     densidadData, 
     tempData, 
@@ -309,12 +323,16 @@ const {
     formattedAlarms,
     activeAlarm,
     attendAlarm,
+    calculatedEta, // Importar ETA
+    elapsedTime,   // Importar Tiempo transcurrido
+    etaData,       // Importar gráfico ETA
     commonChartOptions 
 } = useOrderDetails(orderId);
 
 const donutOptions = {
     responsive: true,
     cutout: '80%',
+    animation: false, // DESACTIVAR ANIMACIÓN para evitar reseteo visual en polling
     plugins: { legend: { display: false }, tooltip: { enabled: false } }
 };
 
@@ -336,16 +354,9 @@ const confirmAttendAlarm = async () => {
     }
 };
 
-// Datos estáticos para ETA (ya que no lo calculamos en backend aún)
-const etaData = ref({
-    labels: ['Transcurrido', 'Restante'],
-    datasets: [{ data: [40, 60], backgroundColor: ['#ab47bc', 'rgba(255,255,255,0.1)'], borderWidth: 0, cutout: '85%' }]
-});
+// eliminado etaData local obsoleto
 
-// --- ELIMINADO handleAttend antiguo ---
-
-
-const expandedRows = ref({}); // Para funcionalidad de expandir fila
+const expandedRows = ref([]); // Para funcionalidad de expandir fila
 
 // NUEVO: Función auxiliar para formatear fechas
 const formatDate = (dateString) => {
@@ -358,7 +369,11 @@ const formatDate = (dateString) => {
 };
 
 onMounted(() => {
-    fetchAllData();
+    startPolling(5000); // Polling cada 5s para la tabla. Los gráficos se actualizan vía WebSocket en tiempo real.
+});
+
+onUnmounted(() => {
+    stopPolling();
 });
 </script>
 
@@ -425,5 +440,12 @@ onMounted(() => {
 @media (max-width: 1200px) {
   .grid-layout, .grid-layout-secondary, .grid-graphs { grid-template-columns: 1fr; }
   .detail-table-card { grid-column: span 1 !important; }
+}
+.hover-bg:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.action-icon-btn {
+    width: 2rem !important; 
+    height: 2rem !important;
 }
 </style>

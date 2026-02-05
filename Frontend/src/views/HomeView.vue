@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import Sidebar from '@/components/Sidebar.vue'; 
 import KpiCards from '@/components/home/KpiCards.vue';
@@ -66,7 +66,8 @@ const {
   recentOrders, 
   orderStats, 
   loading, 
-  loadOrders,
+  startPolling,
+  stopPolling,
   viewOrderDetails
 } = useOrders();
 
@@ -85,7 +86,11 @@ const navigateTo = (route) => {
  * Carga datos al montar el componente
  */
 onMounted(() => {
-  loadOrders();
+  startPolling(10000); // 10s para home dashboard
+});
+
+onUnmounted(() => {
+  stopPolling();
 });
 </script>
 

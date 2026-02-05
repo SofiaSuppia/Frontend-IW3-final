@@ -93,14 +93,15 @@ export function useOrders() {
 
   /**
    * Carga todas las órdenes desde el backend
+   * @param {boolean} isPolling - Indica si es una actualización automática (sin spinner)
    */
-  const loadOrders = async () => {
-    loading.value = true;
+  const loadOrders = async (isPolling = false) => {
+    if (!isPolling) loading.value = true;
     try {
       // El servicio ahora acepta page/size
       const response = await orderService.getAllOrders(page.value, pageSize.value);
       
-      console.log("Datos recibidos:", response);
+      if (!isPolling) console.log("Datos recibidos:", response);
 
       let data = [];
 
@@ -119,15 +120,33 @@ export function useOrders() {
           totalRecords.value = response.length;
       }
 
-      console.log(`Total procesado: ${data.length}`);
+      if (!isPolling) console.log(`Total procesado: ${data.length}`);
       orders.value = data;
       
     } catch (error) {
       console.error(error);
-      toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las órdenes', life: 3000 });
+      if (!isPolling) toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las órdenes', life: 3000 });
     } finally {
-      loading.value = false;
+      if (!isPolling) loading.value = false;
     }
+  };
+
+  
+  let pollingInterval = null;
+
+  const startPolling = (interval = 5000) => {
+      if (pollingInterval) return;
+      loadOrders(false); // Primero con loading
+      pollingInterval = setInterval(() => {
+          loadOrders(true); // Luego silencioso
+      }, interval);
+  };
+
+  const stopPolling = () => {
+      if (pollingInterval) {
+          clearInterval(pollingInterval);
+          pollingInterval = null;
+      }
   };
 
   /**
@@ -195,6 +214,8 @@ export function useOrders() {
 
     // Métodos
     loadOrders,
+    startPolling,
+    stopPolling,
     toggleFilter,
     viewOrderDetails,
     viewConciliacion
