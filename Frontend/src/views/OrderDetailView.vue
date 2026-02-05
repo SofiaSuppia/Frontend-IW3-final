@@ -11,17 +11,18 @@
       <div v-else class="content-container">
         
         <!-- TÍTULO Y BOTONES -->
-        <div class="page-header mb-4 flex justify-content-between align-items-center">
+        <div class="page-header">
           <div>
             <h1 class="page-title">Detalle de Orden</h1>
             <h2 class="order-subtitle">Orden N° #{{ order?.id }}</h2>
           </div>
           
-          <!-- BOTÓN DE CONCILIACIÓN (Visible siempre para probar) -->
+          <!-- CORREGIDO: Comparamos con el string 'FINALIZADA' -->
           <Button 
+            v-if="order?.estado === 'FINALIZADA'"
             label="Ver Conciliación" 
             icon="pi pi-file-pdf" 
-            class="p-button-Help p-button-raised"
+            class="p-button-raised"
             style="background-color: #E94560; border: none;"
             @click="$router.push(`/conciliacion/${orderId}`)"
           />
@@ -50,8 +51,9 @@
               </div>
               <div class="info-group">
                 <label>Estado:</label> 
-                <span :class="order?.estado === 2 ? 'text-green-400' : 'text-blue-400'">
-                    {{ order?.estado === 2 ? 'Cargada' : 'En Proceso' }}
+                <!-- CORREGIDO: Lógica visual del estado también actualizada -->
+                <span :class="order?.estado === 'FINALIZADA' ? 'text-green-400' : 'text-blue-400'">
+                    {{ order?.estado === 'FINALIZADA' ? 'Finalizada' : order?.estado || 'En Proceso' }}
                 </span>
               </div>
             </div>
@@ -238,11 +240,11 @@
             </div>
         </div>
 
-        <!-- BOTÓN: VER CONCILIACIÓN -->
+        <!-- BOTÓN: VER CONCILIACIÓN (ABAJO) -->
         <div class="flex justify-content-end mb-4">
-          <!-- Solo mostrar si la orden esta finalizada (estado 2) -->
+          <!-- CORREGIDO: Comparamos con el string 'FINALIZADA' -->
           <Button 
-              v-if="order?.estado === 2" 
+              v-if="order?.estado === 'FINALIZADA'" 
               label="Ver Conciliación" 
               icon="pi pi-file" 
               class="p-button-help" 
@@ -363,64 +365,78 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* AGREGAR ESTO A TUS ESTILOS EXISTENTES PARA COLORES DE TEXTO ADICIONALES */
-.text-indigo-300 { color: #7986cb; }
-.text-teal-300 { color: #4db6ac; }
-
-/* LOS MISMOS ESTILOS DE ANTES */
+/* 1. LAYOUT GENERAL */
 .dashboard-layout { display: flex; height: 100vh; background-color: #16213E; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
 .main-content { flex: 1; padding: 2rem; overflow-y: auto; background: linear-gradient(rgba(22, 33, 62, 0.8), rgba(22, 33, 62, 0.9)); }
 .content-container { max-width: 1600px; margin: 0 auto; }
+
+/* 2. ENCABEZADO (Aquí arreglamos el botón a la derecha) */
+.page-header { 
+  display: flex;                /* Flexbox para alinear */
+  justify-content: space-between; /* Texto a la izquierda, Botón a la derecha */
+  align-items: center;          /* Centrado vertical */
+  margin-bottom: 3rem;          /* Espacio debajo del título */
+  width: 100%;
+}
 .page-title { color: #F1F6F9; font-size: 1.5rem; margin: 0; font-weight: 600; }
 .order-subtitle { color: #aebbc7; font-size: 1.8rem; margin: 0; font-weight: 300; margin-top: 0.5rem; }
 
+/* 3. GRILLAS Y PANELES (Esto hace visible el contenido) */
 .grid-layout { display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 1.5rem; }
 .grid-layout-secondary { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 1.5rem; }
 .grid-graphs { display: grid; grid-template-columns: 1.02fr 1fr; gap: 1.5rem; }
 .row-spacing { margin-bottom: 3rem; }
 
 .glass-panel {
-    background: #0F3460;
+    background: #0F3460; /* FONDO OSCURO (Crucial para ver el texto) */
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    color: #F1F6F9;
+    color: #F1F6F9; /* COLOR DE TEXTO */
 }
 
-/* Info Cards Updated for density */
-.info-card { display: flex; flex-direction: column; gap: 0.6rem; } /* Reducido un poco el gap para que entre todo */
+/* 4. TARJETAS DE INFORMACIÓN */
+.info-card { display: flex; flex-direction: column; gap: 0.6rem; }
 .card-row { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.4rem; }
-.card-row:last-child { border-bottom: none; /* Quitar borde al último */ }
+.card-row:last-child { border-bottom: none; }
 .info-group { display: flex; flex-direction: column; }
 .info-group label { font-size: 0.70rem; color: #aebbc7; text-transform: uppercase; margin-bottom: 2px; }
-.info-group span { font-size: 0.9rem; } /* Asegurar tamaño legible */
+.info-group span { font-size: 0.9rem; }
 
-/* Alert Card */
+/* Product detail specific */
+.product-detail { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+.temp-value { font-size: 2rem; font-weight: bold; color: #4DB6AC; margin-top: 10px; }
+
+/* Alert Styles */
 .alert-card { border-left: 5px solid #ffa726 !important; background: rgba(255, 167, 38, 0.05); }
-.ok-card { border-left: 5px solid #4DB6AC !important; background: rgba(77, 182, 172, 0.05); }
-.alert-title { color: #F1F6F9; margin: 0 0 0.5rem 0; font-weight: 700; letter-spacing: 0.5px; }
+.ok-card { border-left: 5px solid #4DB6AC !important; background: rgba(77,182,172, 0.05); }
+.alert-title { color: #F1F6F9; margin: 0 0 0.5rem 0; font-weight: 700; }
 .alert-msg { font-size: 0.85rem; color: #aebbc7; line-height: 1.4; margin-bottom: 1.5rem; }
-.action-link { font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+.action-link { font-size: 0.8rem; font-weight: 700; cursor: pointer; }
 .confirm { color: #5c6bc0; }
 
-/* Tablas */
+/* 5. TABLAS */
 .status-warning { color: #ffa726; font-weight: 700; }
 .status-ok { color: #4DB6AC; font-weight: 700; }
 :deep(.compact-table .p-datatable-thead > tr > th) { background: transparent !important; color: #aebbc7 !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important; font-size: 0.8rem; padding: 0.8rem; }
 :deep(.compact-table .p-datatable-tbody > tr > td) { background: transparent !important; color: #F1F6F9 !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important; padding: 0.8rem; font-size: 0.85rem; }
 
-/* Donut */
+/* 6. GRÁFICOS */
 .chart-card { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; min-height: 200px; }
 .chart-wrapper { width: 140px; height: 140px; position: relative; }
 .donut-inner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
 .donut-inner span { display: block; font-size: 1.5rem; font-weight: bold; color: #F1F6F9; }
 .eta-label { font-size: 0.8rem !important; color: #ab47bc !important; margin-bottom: -5px; } 
 .eta-value { font-size: 1.2rem !important; }
-
-/* Charts */
 .h-15rem { height: 15rem; }
-.card-title-sm { align-self: flex-start; margin: 0 0 1rem 0; font-size: 0.9rem; color: #F1F6F9; }
+.card-title, .card-title-sm { align-self: flex-start; margin: 0 0 1rem 0; font-size: 0.9rem; color: #F1F6F9; font-weight: 600; }
+
+/* Utilidades de texto */
+.text-indigo-300 { color: #7986cb; }
+.text-teal-300 { color: #4db6ac; }
+.text-green-400 { color: #4DB6AC; }
+.text-blue-400 { color: #42A5F5; }
 
 @media (max-width: 1200px) {
   .grid-layout, .grid-layout-secondary, .grid-graphs { grid-template-columns: 1fr; }
