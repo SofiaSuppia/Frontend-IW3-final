@@ -23,7 +23,7 @@
             :orders="filteredOrders"
             :loading="loading"
             @view-details="openOrderDetails"
-            @view-conciliacion="viewConciliacion"
+            @view-conciliacion="navigateToConciliacion"
           />
 
           <!-- Paginador -->
@@ -69,13 +69,16 @@ const {
   onPageChange,
   loadOrders,
   toggleFilter,
-  viewOrderDetails,
-  viewConciliacion
 } = useOrders();
 
 const router = useRouter();
 const openOrderDetails = (orderData) => {
   router.push(`/orders/${orderData.id}`);
+};
+
+const navigateToConciliacion = (id) => {
+  // Asumiendo que tu ruta está configurada como /conciliacion/:id
+  router.push(`/conciliacion/${id}`);
 };
 
 // Cargar órdenes al montar el componente

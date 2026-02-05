@@ -8,7 +8,7 @@
       <div class="mb-4 print-hide">
         <Button class="p-button-text text-white" @click="goBack">
             <i class="pi pi-arrow-left" style="margin-right: 10px;"></i>
-            Volver a la Orden
+            Volver
         </Button>
       </div>
 
