@@ -36,7 +36,7 @@
              responsiveLayout="scroll" 
              :loading="loading"
              scrollable 
-             scrollHeight="calc(100vh - 480px)"
+             scrollHeight="calc(100vh - 350px)"
           >
             <Column field="id" header="ID" style="width: 50px"></Column>
             <Column field="username" header="Usuario">
