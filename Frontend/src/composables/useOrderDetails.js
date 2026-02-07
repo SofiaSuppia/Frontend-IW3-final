@@ -233,15 +233,17 @@ export function useOrderDetails(orderId) {
     const progressData = computed(() => {
         const preset = order.value?.preset || 0; 
         
-        // FIX: Si la orden ya está finalizada (estado 2) O
-        // Si la masa acumulada está MUY CERCA del preset (95% o más) pero ya no hay flujo
-        // forzamos el 100% visual para evitar "96%" eterno.
-        
         let currentMass = 0;
         let currentFlow = 0;
+
+        // FIX: Usar la masa acumulada del OBJETIVO ORDEN (Fuente de verdad) si es mayor que el gráfico.
+        // Esto evita que se quede "trabado" si el historial de detalles está incompleto o paginado.
+        const headerMass = order.value?.ultimaMasaAcumulada || 0;
+        const chartMass = chartDetails.value.length > 0 ? (chartDetails.value[chartDetails.value.length - 1].masaAcumulada || 0) : 0;
+        currentMass = Math.max(headerMass, chartMass);
+
         if (chartDetails.value.length > 0) {
             const last = chartDetails.value[chartDetails.value.length - 1];
-            currentMass = last.masaAcumulada || 0;
             currentFlow = last.caudal || 0;
         }
 
@@ -287,15 +289,22 @@ export function useOrderDetails(orderId) {
         // FIX: Si ya finalizó -> ETA Cero
         if (order.value?.estado === 'FINALIZADA') return { text: 'Finalizada', value: 0 };
         
-        if (!order.value || chartDetails.value.length === 0) return { text: '--', value: 0 };
+        if (!order.value) return { text: '--', value: 0 };
         
-        const lastDetail = chartDetails.value[chartDetails.value.length - 1]; 
-        const currentMass = lastDetail.masaAcumulada || 0;
-        const currentFlow = lastDetail.caudal || 0; 
+        // Masa robusta (Max entre Header y Gráfico)
+        const headerMass = order.value?.ultimaMasaAcumulada || 0;
+        const chartMass = chartDetails.value.length > 0 ? (chartDetails.value[chartDetails.value.length - 1].masaAcumulada || 0) : 0;
+        const currentMass = Math.max(headerMass, chartMass);
+        
         const preset = order.value.preset || 0;
 
         // Validaciones básicas
         if (currentMass >= preset) return { text: 'Completando...', value: 0 };
+        
+        if (chartDetails.value.length === 0) return { text: '--', value: 0 };
+        
+        const lastDetail = chartDetails.value[chartDetails.value.length - 1]; 
+        const currentFlow = lastDetail.caudal || 0;
         
         // Detección de "Dato Viejo"
         // Si el último dato tiene más de 60 segundos de antigüedad, no podemos confiar en el caudal actual

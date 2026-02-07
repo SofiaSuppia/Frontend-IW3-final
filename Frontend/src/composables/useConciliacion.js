@@ -64,46 +64,41 @@ export function useConciliacion(orderId) {
         const o = orderRaw.value || {};
         const c = concRaw.value || {}; 
         
-        // --- 1. DATOS NUMÉRICOS (Mapeo basado en tu captura de consola) ---
-        
-        // Buscamos "Pesaje inicial" (con espacio) O "pesajeInicial" (código)
-        const pInicial = findVal(o, c, ["Pesaje inicial", "pesajeInicial", "pesaje_inicial"]);
-        
-        const pFinal = findVal(o, c, ["Pesaje final", "pesajeFinal", "pesaje_final"]);
-        
-        const prodCargado = findVal(o, c, ["Producto cargado", "productoCargado", "masaAcumulada", "masa_acumulada"]);
-        
-        // El neto y diferencia a veces vienen calculados con nombres largos
-        let neto = findVal(o, c, ["Neto por balanza", "netoPorBalanza", "neto"]);
-        if (neto === 0) neto = pFinal - pInicial; // Auto-calcular si falla
+        // --- 1. DATOS EXACTOS DESDE EL SERIALIZADOR BACKEND ---
+        // Claves exactas: "Pesaje inicial", "Pesaje final", "Producto cargado", "Neto por balanza", "Diferencia entre balanza y caudalímetro"
 
-        let dif = findVal(o, c, ["Diferencia entre balanza y caudalimetro", "diferencia", "diferenciaBalanzaCaudalimetro"]);
-        if (dif === 0) dif = neto - prodCargado; // Auto-calcular si falla
+        const pInicial = findVal(o, c, ["Pesaje inicial"]);
+        const pFinal = findVal(o, c, ["Pesaje final"]);
+        
+        // "Producto cargado" en el backend = orden.getUltimaMasaAcumulada()
+        const prodCargado = findVal(o, c, ["Producto cargado"]);
+        
+        const neto = findVal(o, c, ["Neto por balanza"]);
+        const dif = findVal(o, c, ["Diferencia entre balanza y caudalímetro"]);
 
         // --- 2. PROMEDIOS ---
-        const promTemp = findVal(o, c, ["Promedio de temperatura", "promedioTemperatura"]);
-        const promDens = findVal(o, c, ["Promedio de densidad", "promedioDensidad"]);
-        const promCaudal = findVal(o, c, ["Promedio de caudal", "promedioCaudal"]);
+        const promTemp = findVal(o, c, ["Promedio de temperatura"]);
+        const promDens = findVal(o, c, ["Promedio de densidad"]);
+        const promCaudal = findVal(o, c, ["Promedio de caudal"]);
 
-        // --- 3. PRODUCTO ---
-        // El nombre del producto es string, no usamos findVal numérico
-        let prodObj = c.producto || o.producto || (o.detalleOrden && o.detalleOrden.producto) || {};
-        // A veces el nombre viene plano en la raíz
-        const nombrePlano = c["Producto"] || c["producto"] || c["nombreProducto"]; 
-        
-        const prodNombre = nombrePlano || prodObj.descripcion || prodObj.nombre || prodObj.name || 'Sin Especificar';
-        const prodDesc = prodObj.especificaciones || prodObj.descripcion || 'Sin descripción';
+        // --- 3. METADATA ---
+        // Preset (Objetivo)
+        const preset = findVal(o, c, ["preset"]);
+
+        let prodObj = c.producto || o.producto || {};
+        const prodNombre = prodObj.nombre || 'Sin Especificar';
+        const prodDesc = prodObj.descripcion || '';
 
         return {
-            fechaGeneracion: c.fechaGeneracion || o.fechaFinCarga || new Date().toISOString(),
-            
+            fechaGeneracion: o.fechaFinCarga || new Date().toISOString(),
             productoNombre: prodNombre,
             productoDescripcion: prodDesc,
-
+            
+            preset: preset,
             pesajeInicial: pInicial,
             pesajeFinal: pFinal,
             netoPorBalanza: neto,
-            productoCargado: prodCargado,
+            productoCargado: prodCargado, // Esto es el caudalímetro acumulado
             diferencia: dif,
 
             promedioTemperatura: promTemp,

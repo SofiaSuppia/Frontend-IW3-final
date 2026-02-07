@@ -60,23 +60,23 @@
           <table class="report-table">
             <tbody>
               <tr>
-                <td class="col-label">Pesaje Inicial (Balanza):</td>
+                <td class="col-label">Pesaje Inicial:</td>
                 <td class="col-value">{{ formatNumber(conciliacion.pesajeInicial) }} kg</td>
               </tr>
               <tr>
-                <td class="col-label">Pesaje Final (Balanza):</td>
+                <td class="col-label">Pesaje Final:</td>
                 <td class="col-value">{{ formatNumber(conciliacion.pesajeFinal) }} kg</td>
               </tr>
+              <tr>
+                <td class="col-label">Producto Cargado:</td>
+                <td class="col-value">{{ formatNumber(conciliacion.productoCargado) }} kg</td>
+              </tr>
               <tr class="highlight-row">
-                <td class="col-label">Neto Cargado (Balanza):</td>
+                <td class="col-label">Neto por Balanza:</td>
                 <td class="col-value font-bold">{{ formatNumber(conciliacion.netoPorBalanza) }} kg</td>
               </tr>
               <tr>
-                <td class="col-label">Total Cargado (Caudalímetro):</td>
-                <td class="col-value">{{ formatNumber(conciliacion.productoCargado) }} kg</td>
-              </tr>
-              <tr>
-                <td class="col-label">Diferencia (Balanza - Caudal):</td>
+                <td class="col-label">Diferencia (Balanza - Caudalímetro):</td>
                 <td class="col-value font-bold" :style="{ color: Math.abs(conciliacion.diferencia) > 10 ? 'red' : 'green' }">
                     {{ formatNumber(conciliacion.diferencia) }} kg
                 </td>
@@ -108,7 +108,7 @@
 
         <!-- FOOTER -->
         <footer class="report-footer">
-          <p class="company-name">Documento generado autmáticamente por el sistema FuelOps v1.0</p>
+          <p class="company-name">Documento generado automáticamente por el sistema FluxGas v1.0</p>
           <div class="print-hide text-right mt-3">
             <Button label="Imprimir Reporte" icon="pi pi-print" class="p-button-outlined p-button-secondary" @click="printReport"/>
           </div>
@@ -120,7 +120,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useConciliacion } from '../composables/useConciliacion';
 import Sidebar from '../components/Sidebar.vue';
@@ -148,6 +148,13 @@ const formatNumber = (val, dec = 2) => {
 
 onMounted(() => {
     fetchConciliacion();
+    // Cambiamos el título de la pestaña para que al descargar sugiera este nombre
+    document.title = `Conciliacion_Orden_${orderId}`;
+});
+
+onUnmounted(() => {
+    // Restauramos el título original al salir
+    document.title = 'FluxGas'; 
 });
 </script>
 
