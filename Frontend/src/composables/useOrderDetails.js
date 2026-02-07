@@ -102,8 +102,11 @@ export function useOrderDetails(orderId) {
         // 4. Conexión WebSocket para Gráficos
         const numericOrderId = Number(orderId);
         
+        // Usamos el hostname actual para soportar conexiones en LAN
+        const wsUrl = `http://${window.location.hostname}:8080/ws`;
+        
         // Conexión segura usando el servicio
-        webSocketService.connect('http://localhost:8080/ws', () => {
+        webSocketService.connect(wsUrl, () => {
             console.log("Suscribiendo a /topic/masa...");
             
             wsSubscription = webSocketService.subscribe('/topic/masa', (newDetail) => {
