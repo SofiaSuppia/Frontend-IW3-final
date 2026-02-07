@@ -4,6 +4,7 @@
     modal 
     :header="isEditMode ? 'Editar Usuario' : 'Agregar Usuario'" 
     :style="{ width: '600px' }"
+    :contentStyle="{ overflow: 'visible' }"
     class="custom-dialog-dark"
     :draggable="false"
     :closeOnEscape="true"
@@ -12,8 +13,8 @@
     @update:visible="emit('update:visible', $event)"
   >
     <div class="form-content">
-      <!-- Espacio agregado arriba (mt-4) -->
-      <div class="field-checkbox mb-3 mt-4">
+      <!-- Espacio separación superior -->
+      <div class="field-checkbox mb-3" style="margin-top: 1rem;">
         <Checkbox v-model="form.isInternal" :binary="true" inputId="isInternal" />
         <label for="isInternal" class="ml-2 label-text">¿Es usuario interno?</label>
       </div>
