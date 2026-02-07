@@ -3,7 +3,7 @@
     :visible="visible" 
     modal 
     :header="isEditMode ? 'Editar Usuario' : 'Agregar Usuario'" 
-    :style="{ width: '400px' }"
+    :style="{ width: '600px' }"
     class="custom-dialog-dark"
     :draggable="false"
     :closeOnEscape="true"
@@ -12,11 +12,13 @@
     @update:visible="emit('update:visible', $event)"
   >
     <div class="form-content">
-      <div class="field-checkbox mb-4">
+      <!-- Espacio agregado arriba (mt-4) -->
+      <div class="field-checkbox mb-3 mt-4">
         <Checkbox v-model="form.isInternal" :binary="true" inputId="isInternal" />
         <label for="isInternal" class="ml-2 label-text">¿Es usuario interno?</label>
       </div>
       
+      <!-- Márgenes ajustados (mb-3 para separación estándar) -->
       <div class="field mb-3 input-wrapper">
         <label class="input-label">Email</label>
         <InputText v-model="form.email" class="w-full custom-input" placeholder="prueba@mail.com" />
@@ -38,7 +40,7 @@
         <Dropdown v-model="form.role" :options="roleOptions" placeholder="Seleccionar" class="w-full custom-dropdown-form" appendTo="body" />
       </div>
 
-      <div v-if="isEditMode" class="field mb-4 input-wrapper">
+      <div v-if="isEditMode" class="field mb-3 input-wrapper">
         <label class="input-label">Estado</label>
         <Dropdown v-model="form.status" :options="statusOptions" placeholder="Seleccionar" class="w-full custom-dropdown-form" appendTo="body" />
       </div>
@@ -133,14 +135,14 @@ const onSave = () => {
 }
 
 :deep(.custom-input-pass) { width: 100%; position: relative; display: block; }
-:deep(.custom-input-pass .p-inputtext) { width: 100%; padding-right: 40px !important; }
+:deep(.custom-input-pass .p-inputtext) { width: 100%; padding-right: 5px !important; }
 
 :deep(.custom-input-pass .p-password-show-icon),
 :deep(.custom-input-pass .p-password-hide-icon),
 :deep(.custom-input-pass .p-icon),
 :deep(.custom-input-pass svg) {
   color: #aebbc7 !important; cursor: pointer; position: absolute !important; top: 50% !important; right: 2px !important; transform: translateY(-50%) !important;
-  left: auto !important; margin-top: 0 !important; width: 1.1rem !important; height: 1.1rem !important; z-index: 10 !important;
+  left: auto !important; margin-top: 2 !important; width: 1.1rem !important; height: 1.1rem !important; z-index: 10 !important;
 }
 
 :deep(.custom-dropdown-form .p-dropdown-trigger) { color: #aebbc7; }
@@ -149,9 +151,9 @@ const onSave = () => {
 /* Estado Normal: Cuadrado vacío, borde GRUESO y redondeado */
 :deep(.p-checkbox .p-checkbox-box) { 
   background: transparent !important;   
-  border: 1px solid #aebbc7 !important; /* <--- Borde grueso (3px) como la imagen */
-  border-radius: 8px !important;        /* <--- Bordes bien redondeados */
-  width: 24px !important;               /* Un poco más grande para que luzca */
+  border: 2px solid #aebbc7 !important; /* <--- Borde grueso (2px) para que se vea bien el cuadrado vacío */
+  border-radius: 6px !important;        /* <--- Bordes redondeados */
+  width: 24px !important;               
   height: 24px !important;
 }
 
@@ -166,13 +168,14 @@ const onSave = () => {
 :deep(.p-checkbox .p-checkbox-icon) {
   font-weight: 800 !important;          /* Icono bold */
   font-size: 14px !important;
+  color: #ffffff !important;            /* Asegurar tilde blanca */
 }
 
 .field-checkbox { 
   display: flex; 
   align-items: center; 
   gap: 15px;
-  margin-bottom: 1rem; 
+  /* margin-bottom eliminado aqui porque se controla en template con mb-2 */
   padding: 12px 16px; 
   background-color: #0F3460; 
   border-radius: 6px; 
@@ -180,7 +183,8 @@ const onSave = () => {
 }
 
 /* FOOTER Y BOTONES (Arreglado el espacio) */
-.dialog-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 0.5rem 0; }
+/* gap aumentado a 1.5rem par separar mas los botones */
+.dialog-footer { display: flex; justify-content: flex-end; gap: 1.5rem; padding: 0.5rem 0; }
 
 .cancel-btn { color: #aebbc7 !important; font-weight: 600; letter-spacing: 0.5px; font-size: 0.85rem; }
 .cancel-btn:hover { color: #fff !important; background: rgba(255, 255, 255, 0.05) !important; }
@@ -203,6 +207,6 @@ const onSave = () => {
 }
 
 .mb-3 { margin-bottom: 1rem; } 
-.mb-4 { margin-bottom: 1.5rem; } .w-full { width: 100%; }
+.mb-4 { margin-bottom: 1rem; } .w-full { width: 100%; }
 .label-text { color: #F1F6F9; font-size: 0.9rem; font-weight: 500; cursor: pointer; user-select: none; }
 </style>
