@@ -210,7 +210,7 @@ const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFix
 <style scoped>
 /* Estilos simplificados - mantener solo los esenciales */
 .dashboard-layout { display: flex; height: 100vh; background-color: #16213E; }
-.main-content { flex: 1; padding: 2rem; overflow-y: auto; background: linear-gradient(rgba(22, 33, 62, 0.6), rgba(22, 33, 62, 0.75)), url('/assets/images/fondoCompleto.png') no-repeat center center; background-size: cover; background-attachment: fixed; }
+.main-content { flex: 1; padding: 2rem; overflow-y: auto; background: linear-gradient(rgba(22, 33, 62, 0.6), rgba(22, 33, 62, 0.75)), url('/assets/images/fondo.png') no-repeat center center; background-size: cover; background-attachment: fixed; }
 .content-container { max-width: 1400px; margin: 0 auto; }
 .breadcrumb { color: #aebbc7; font-size: 0.9rem; display: flex; gap: 10px; margin-bottom: 1rem; }
 .back-arrow { cursor: pointer; font-size: 1.2rem; transition: color 0.2s; }

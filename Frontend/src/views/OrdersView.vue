@@ -107,7 +107,7 @@ onUnmounted(() => {
 .main-content {
   flex: 1;
   background: linear-gradient(rgba(22, 33, 62, 0.6), rgba(22, 33, 62, 0.75)), 
-              url('/assets/images/fondoCompleto.png') no-repeat center center;
+              url('/assets/images/fondo.png') no-repeat center center;
   background-size: cover;
   background-attachment: fixed;
   padding: 2rem;
