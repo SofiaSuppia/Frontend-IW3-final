@@ -120,7 +120,7 @@ onUnmounted(() => {
   background-size: cover;
   background-attachment: fixed;
   padding: 2rem;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .dashboard-container { 

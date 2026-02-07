@@ -47,7 +47,7 @@ defineProps({
   background: rgba(255, 255, 255, 0.05); 
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1); 
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 15px; 
   display: flex; 
   align-items: center; 
