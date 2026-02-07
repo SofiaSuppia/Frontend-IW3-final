@@ -1,5 +1,5 @@
 <template>
-  <div class="table-wrapper">
+  <div class="orders-table-container">
     
     <!-- Overlay de carga -->
     <div v-if="loading" class="loading-overlay">
@@ -13,7 +13,7 @@
       class="orders-table"
       responsiveLayout="scroll"
       scrollable
-      scrollHeight="600px" 
+      scrollHeight="calc(100vh - 380px)" 
       emptyMessage="No hay órdenes registradas"
     >
       <!-- NUEVO: Columna ID -->
@@ -141,15 +141,10 @@ const getTagStyle = (estado) => {
 </script>
 
 <style scoped>
-/* Contenedor de tabla - Fondo transparente con efecto glass */
-.table-wrapper {
-  background: rgba(255, 255, 255, 0.05); 
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px; 
-  padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+/* Contenedor relativo para posicionar overlay */
+.orders-table-container {
   position: relative;
+  /* Altura gestionada por el scrollHeight de la tabla */
 }
 
 /* Overlay de carga */
