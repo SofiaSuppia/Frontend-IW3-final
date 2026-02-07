@@ -223,3 +223,141 @@ body {
     border-radius: 12px 12px 0 0 !important;
 }
 
+/* ==========================================================================
+   FIX GLOBAL PARA MENÚS DESPLEGABLES (PrimeVue V3/V4)
+   Soluciona el problema de espacios excesivos en botones "Editar/Eliminar"
+   ========================================================================== */
+
+/* 1. Resetear el contenedor principal del menú */
+.p-menu, 
+.p-menu-overlay,
+.custom-menu {
+    /* Forzamos que no tenga huecos definidos por variables */
+    --p-menu-list-gap: 0px !important;
+    --p-menu-item-gap: 0px !important;
+    
+    padding: 5px !important;      /* Padding exterior pequeño */
+    gap: 0 !important;            /* Cero gap flex */
+    height: auto !important;      /* Altura automática */
+    
+    /* Estilo visual oscuro */
+    background-color: #0F3460 !important; 
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 8px !important;
+}
+
+/* 2. Resetear la lista interna (ul) */
+.p-menu .p-menu-list,
+.p-menu-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* 3. Resetear el item de lista (li) y wrapper (div) */
+.p-menu .p-menuitem, .p-menu .p-menu-item,
+.p-menu .p-menuitem-content, .p-menu .p-menu-item-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* 4. ELIMINAR EL MARGEN CAUSANTE DEL PROBLEMA EN EL ENLACE (a) */
+.p-menu .p-menuitem-link,
+.p-menu .p-menu-item-link {
+    /* Aquí eliminamos el 0.8rem que heredaba de otros estilos globales */
+    margin-bottom: 0 !important; 
+    margin-top: 0 !important;
+    
+    /* Espaciado interno cómodo */
+    padding: 10px 14px !important;
+    
+    /* Asegurar ancho completo y alineación */
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    color: #F1F6F9 !important;
+    border-radius: 4px !important;
+    text-decoration: none !important;
+}
+
+/* 5. Efecto Hover limpio */
+.p-menu .p-menuitem-link:hover,
+.p-menu .p-menu-item-link:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    transform: none !important;
+}
+
+/* ==========================================================================
+   FIX GLOBAL DEFINITIVO (NUCLEAR) PARA MENÚS
+   Usamos 'body' al inicio para que tenga más peso que el bloque anterior
+   ========================================================================== */
+
+/* 1. Resetear el contenedor principal */
+body .p-menu, 
+body .p-menu-overlay,
+body .custom-menu {
+    --p-menu-list-gap: 0px !important;
+    --p-menu-item-gap: 0px !important;
+    
+    padding: 4px !important;
+    gap: 0 !important;
+    height: auto !important;
+    
+    background-color: #0F3460 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 8px !important;
+}
+
+/* 2. Resetear listas */
+body .p-menu .p-menu-list,
+body .p-menu-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* 3. Resetear items (li) */
+body .p-menu .p-menuitem, body .p-menu .p-menu-item, 
+body .p-menu .p-menuitem-content, body .p-menu .p-menu-item-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* 4. EL ENLACE (A) - Aquí es donde ganamos la guerra del margen */
+body .p-menu .p-menuitem-link,
+body .p-menu .p-menu-item-link {
+    /* MÁS PESO QUE EL BLOQUE ANTERIOR */
+    margin-bottom: 0 !important; 
+    margin-top: 0 !important;
+    
+    padding: 10px 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    color: #F1F6F9 !important;
+    border-radius: 4px !important;
+}
+
+/* 5. Hover */
+body .p-menu .p-menuitem-link:hover,
+body .p-menu .p-menu-item-link:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    transform: none !important;
+}
+
+/* 6. Asegurar que el último tampoco tenga margen */
+body .p-menu .p-menuitem:last-child .p-menuitem-link,
+body .p-menu .p-menu-item:last-child .p-menu-item-link {
+    margin-bottom: 0 !important;
+}
+
