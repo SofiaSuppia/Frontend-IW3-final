@@ -36,12 +36,12 @@
         <Password v-model="form.password" class="w-full custom-input-pass" :feedback="false" toggleMask :placeholder="isEditMode ? 'Dejar vacío para mantener' : ''" />
       </div>
       
-      <div class="field mb-3 input-wrapper">
+      <div class="field input-wrapper" :class="isEditMode ? 'mb-3' : 'mb-1'">
         <label class="input-label">Roles</label>
         <Dropdown v-model="form.role" :options="roleOptions" placeholder="Seleccionar" class="w-full custom-dropdown-form" appendTo="body" />
       </div>
 
-      <div v-if="isEditMode" class="field mb-3 input-wrapper">
+      <div v-if="isEditMode" class="field mb-1 input-wrapper">
         <label class="input-label">Estado</label>
         <Dropdown v-model="form.status" :options="statusOptions" placeholder="Seleccionar" class="w-full custom-dropdown-form" appendTo="body" />
       </div>
@@ -207,6 +207,7 @@ const onSave = () => {
   margin-right: 0 !important;
 }
 
+.mb-1 { margin-bottom: 0.25rem; }
 .mb-3 { margin-bottom: 1rem; } 
 .mb-4 { margin-bottom: 1rem; } .w-full { width: 100%; }
 .label-text { color: #F1F6F9; font-size: 0.9rem; font-weight: 500; cursor: pointer; user-select: none; }
