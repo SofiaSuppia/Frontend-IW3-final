@@ -1,6 +1,6 @@
 <template>
   <div class="form-content">
-    <div class="field mb-3 input-wrapper">
+    <div class="field mb-3 input-wrapper" style="margin-top: 1rem;">
       <label class="input-label">{{ isEditing ? 'Nombre' : 'Producto *' }}</label>
       <InputText 
         v-model.trim="localProduct.nombre" 
@@ -22,7 +22,7 @@
       />
     </div>
 
-    <div class="field mb-3 input-wrapper">
+    <div class="field mb-1 input-wrapper">
       <label class="input-label">Temperatura Umbral (°C) *</label>
       <InputNumber 
         v-model="localProduct.thresholdTemp" 
@@ -119,6 +119,7 @@ const localProduct = computed({
   font-weight: 500;
 }
 
+.mb-1 { margin-bottom: 0.25rem; }
 .mb-3 { margin-bottom: 1rem; }
 .w-full { width: 100%; }
 </style>

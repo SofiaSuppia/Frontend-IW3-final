@@ -217,8 +217,18 @@ const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFix
 .back-arrow:hover { color: white; }
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 .page-title { color: #F1F6F9; font-size: 2rem; margin: 0; font-weight: 600; }
-.add-btn { background-color: #4361ee !important; border: none !important; font-weight: 700 !important; padding: 0.7rem 1.5rem !important; border-radius: 4px !important; }
+.add-btn { 
+  background-color: #4361ee !important; 
+  border: none !important; 
+  font-weight: 700 !important; 
+  padding: 0.7rem 1.5rem !important; 
+  border-radius: 4px !important; 
+  display: flex !important;
+  gap: 0.5rem !important;
+  align-items: center !important;
+}
 .add-btn:hover { background-color: #3a56d4 !important; }
+:deep(.add-btn .p-button-icon) { margin-right: 0 !important; }
 
 /* Contenedor de tabla con efecto glass */
 .table-wrapper { 
@@ -361,10 +371,15 @@ const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFix
   padding: 1rem 1.5rem !important; 
 }
 
-.cancel-btn { color: #aebbc7 !important; font-weight: 600; }
+.cancel-btn { color: #aebbc7 !important; font-weight: 600; display: flex !important; gap: 0.5rem !important; align-items: center !important; }
 .cancel-btn:hover { color: #fff !important; background: rgba(255, 255, 255, 0.05) !important; }
-.save-btn { color: #7e73f0 !important; font-weight: 700; }
+.save-btn { color: #7e73f0 !important; font-weight: 700; display: flex !important; gap: 0.5rem !important; align-items: center !important; }
 .save-btn:hover { background: rgba(126, 115, 240, 0.15) !important; }
+
+:deep(.cancel-btn .p-button-icon),
+:deep(.save-btn .p-button-icon) {
+  margin-right: 0 !important;
+}
 
 /* Animación de entrada */
 @keyframes fadeIn { 
