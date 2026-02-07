@@ -57,7 +57,7 @@
             </Column>
             <Column field="type" header="Tipo">
               <template #body="{ data }">
-                <Tag :value="data.type" :severity="CONFIG_TYPES[data.type]?.severity" style="background: transparent; border: none; padding: 0; font-weight: 500;" />
+                <Tag :value="data.type" :severity="CONFIG_TYPES[data.type]?.severity" style="background: transparent; border: none; padding: 0; font-weight: 500; color: #F1F6F9;" />
               </template>
             </Column>
             <Column field="status" header="Estado">

@@ -361,3 +361,65 @@ body .p-menu .p-menu-item:last-child .p-menu-item-link {
     margin-bottom: 0 !important;
 }
 
+/* ==========================================================================
+   FIX GLOBAL PARA DROPDOWNS Y FILTROS (Eliminar espacios entre opciones)
+   ========================================================================== */
+
+/* 1. Item de Dropdown (Lista simple) */
+body .p-dropdown-item {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+    padding: 10px 14px !important; /* Espacio interno normal */
+    color: #F1F6F9 !important;
+    border-radius: 0 !important; /* Cuadrado para lista continua o levemente redondeado */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; /* Línea separadora sutil */
+}
+
+/* 2. Item de MultiSelect (Si usas filtros con checkbox) */
+body .p-multiselect-item {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+    padding: 10px 14px !important;
+}
+
+/* 3. Asegurar que el último elemento no tenga borde ni margen */
+body .p-dropdown-item:last-child,
+body .p-multiselect-item:last-child {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+}
+
+/* 4. Panel contenedor del dropdown (la caja flotante) */
+body .p-dropdown-panel .p-dropdown-items,
+body .p-multiselect-panel .p-multiselect-items {
+    padding: 0 !important;
+    background-color: #0F3460 !important;
+    gap: 0 !important;
+}
+
+/* 5. Hover para Dropdowns */
+body .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover,
+body .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    transform: none !important; /* Evitar movimiento al pasar el mouse */
+}
+
+/* ==========================================================================
+   FIX ALINEACIÓN ICONO DE LIMPIAR (X) EN DROPDOWNS
+   Alinea verticalmente la X con la flecha del menú desplegable
+   ========================================================================== */
+body .p-dropdown-clear-icon {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    right: 3rem !important; /* Separado de la flecha (trigger) a la izquierda */
+    margin-top: 0 !important;
+    color: var(--color-text-muted) !important;
+    font-size: 0.9rem !important;
+}
+
+body .p-dropdown-clear-icon:hover {
+    color: #F1F6F9 !important;
+}
+
