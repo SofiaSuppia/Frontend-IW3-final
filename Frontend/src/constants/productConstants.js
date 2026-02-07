@@ -32,7 +32,7 @@ export const SUCCESS_MESSAGES = {
 export const INITIAL_PRODUCT = {
   descripcion: '',
   nombre: '',
-  thresholdTemp: 0,
+  umbralTemperatura: 0,
   density: 0,
   stock: false
 };

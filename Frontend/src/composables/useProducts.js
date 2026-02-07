@@ -27,7 +27,7 @@ export function useProducts() {
 
   const formErrors = ref({
     nombre: '',
-    thresholdTemp: '',
+    umbralTemperatura: '',
     density: ''
   });
 
@@ -50,6 +50,9 @@ export function useProducts() {
       }
 
       products.value = data;
+      if (products.value.length > 0) {
+        console.log('📦 Estructura del primer producto:', JSON.stringify(products.value[0], null, 2));
+      }
       console.log('✅ Productos cargados:', products.value.length);
     } catch (error) {
       console.error('❌ Error al cargar productos:', error);
@@ -134,11 +137,11 @@ export function useProducts() {
       isValid = false;
     }
 
-    if (product.thresholdTemp === null || product.thresholdTemp === undefined) {
-      formErrors.value.thresholdTemp = ERROR_MESSAGES.REQUIRED_FIELD;
+    if (product.umbralTemperatura === null || product.umbralTemperatura === undefined) {
+      formErrors.value.umbralTemperatura = ERROR_MESSAGES.REQUIRED_FIELD;
       isValid = false;
-    } else if (isNaN(product.thresholdTemp)) {
-      formErrors.value.thresholdTemp = ERROR_MESSAGES.INVALID_NUMBER;
+    } else if (isNaN(product.umbralTemperatura)) {
+      formErrors.value.umbralTemperatura = ERROR_MESSAGES.INVALID_NUMBER;
       isValid = false;
     }
 
@@ -154,7 +157,7 @@ export function useProducts() {
   };
 
   const clearFormErrors = () => {
-    formErrors.value = { nombre: '', thresholdTemp: '', density: '' };
+    formErrors.value = { nombre: '', umbralTemperatura: '', density: '' };
   };
 
   // ===================================

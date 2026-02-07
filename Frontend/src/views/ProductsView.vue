@@ -42,9 +42,9 @@
             
             <Column field="nombre" header="Producto" :sortable="true" style="width: 25%" />
             
-            <Column field="thresholdTemp" header="Temperatura Umbral (°C)" :sortable="true" style="width: 15%">
+            <Column field="umbralTemperatura" header="Temperatura Umbral (°C)" :sortable="true" style="width: 15%">
               <template #body="{ data }">
-                {{ formatTemp(data.thresholdTemp) }}
+                {{ formatTemp(data.umbralTemperatura) }}
               </template>
             </Column>
             
@@ -204,7 +204,11 @@ const toggleMenu = (event, product) => {
   actionMenu.value.toggle(event);
 };
 
-const formatTemp = (temp) => temp !== null && temp !== undefined ? `${temp.toFixed(1)}°C` : 'N/A';
+const formatTemp = (temp) => {
+  if (temp === null || temp === undefined || temp === '') return 'N/A';
+  const num = parseFloat(temp);
+  return isNaN(num) ? 'N/A' : `${num.toFixed(1)}°C`;
+};
 </script>
 
 <style scoped>

@@ -25,16 +25,16 @@
     <div class="field mb-1 input-wrapper">
       <label class="input-label">Temperatura Umbral (°C) *</label>
       <InputNumber 
-        v-model="localProduct.thresholdTemp" 
+        v-model="localProduct.umbralTemperatura" 
         class="w-full custom-input-number"
-        :class="{ 'p-invalid': errors.thresholdTemp }"
+        :class="{ 'p-invalid': errors.umbralTemperatura }"
         :minFractionDigits="1"
         :maxFractionDigits="2"
         :min="-273.15"
         :max="1000"
         placeholder="0.0"
       />
-      <small v-if="errors.thresholdTemp" class="p-error">{{ errors.thresholdTemp }}</small>
+      <small v-if="errors.umbralTemperatura" class="p-error">{{ errors.umbralTemperatura }}</small>
     </div>
   </div>
 </template>
