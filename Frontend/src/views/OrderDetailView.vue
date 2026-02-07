@@ -277,21 +277,6 @@
             </div>
         </div>
 
-        <!-- BOTÓN: VER CONCILIACIÓN (ABAJO) -->
-        <div class="flex justify-content-end mb-4">
-<<<<<<< HEAD
-          <!-- Solo mostrar si la orden esta finalizada (estado 'FINALIZADA') -->
-=======
-          <!-- CORREGIDO: Comparamos con el string 'FINALIZADA' -->
->>>>>>> f7044aee538a8a88e3e803ad59a1162e1fab7267
-          <Button 
-              v-if="order?.estado === 'FINALIZADA'" 
-              label="Ver Conciliación" 
-              icon="pi pi-file" 
-              class="p-button-help" 
-              @click="$router.push(`/conciliacion/${orderId}`)"
-          />
-        </div>
 
         <!-- DIALOGO DE ATENCION DE ALARMA -->
         <Dialog 
