@@ -4,44 +4,37 @@
  */
 export const HOME_STATUS_CONFIG = {
   'PENDIENTE_PESAJE_INICIAL': { 
-    label: 'Espera de Pesaje', 
+    label: 'Espera Pesaje', 
     severity: 'warning', 
-    icon: '⚠️', 
+    icon: 'pi pi-clock', 
     color: '#F9A826', 
-    bgColor: 'rgba(249, 168, 38, 0.2)' 
+    bgColor: 'rgba(249, 168, 38, 0.15)' 
   },
   'PESAJE_INICIAL_REGISTRADO': { 
     label: 'Pesaje Inicial', 
     severity: 'info', 
-    icon: '⚡', 
+    icon: 'pi pi-box', 
     color: '#64b5f6', 
-    bgColor: 'rgba(100, 181, 246, 0.2)' 
+    bgColor: 'rgba(100, 181, 246, 0.15)' 
   },
   'CERRADA_PARA_CARGA': { 
-    label: 'En Carga', 
+    label: 'Cerrada', 
     severity: 'danger', 
-    icon: '🛑', 
+    icon: 'pi pi-exclamation-circle', 
     color: '#E94560', 
-    bgColor: 'rgba(233, 69, 96, 0.2)' 
-  },
-  'PESAJE_FINAL_REGISTRADO': { 
-    label: 'Fin de Carga', 
-    severity: 'success', 
-    icon: '✅', 
-    color: '#2ecc71', 
-    bgColor: 'rgba(46, 204, 113, 0.2)' 
+    bgColor: 'rgba(233, 69, 96, 0.15)' 
   },
   'FINALIZADA': { 
     label: 'Finalizada', 
     severity: 'secondary', 
-    icon: '🏁', 
+    icon: 'pi pi-flag', 
     color: '#aebbc7', 
     bgColor: 'rgba(255, 255, 255, 0.1)' 
   },
   'DEFAULT': { 
     label: 'Desconocido', 
     severity: 'contrast', 
-    icon: '❓', 
+    icon: 'pi pi-question-circle', 
     color: '#fff', 
     bgColor: 'rgba(255,255,255,0.1)' 
   }
@@ -63,6 +56,5 @@ export const KPI_ORDER = [
   'PENDIENTE_PESAJE_INICIAL', 
   'PESAJE_INICIAL_REGISTRADO', 
   'CERRADA_PARA_CARGA', 
-  'PESAJE_FINAL_REGISTRADO', 
   'FINALIZADA'
 ];

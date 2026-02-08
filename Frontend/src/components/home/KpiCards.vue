@@ -10,7 +10,7 @@
         class="stat-icon" 
         :style="{ background: card.bgColor, color: card.color }"
       >
-        {{ card.icon }}
+        <i :class="card.icon" style="font-size: 1.5rem;"></i>
       </div>
       <div class="stat-info">
         <h3>{{ card.label }}</h3>
