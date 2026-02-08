@@ -80,6 +80,7 @@
       v-model:visible="showAddDialog" 
       :header="DIALOG_TITLES.ADD" 
       modal
+      :closable="false"
       :style="{ width: '600px' }"
       class="custom-dialog-dark"
     >
@@ -99,6 +100,7 @@
       v-model:visible="showEditDialog" 
       :header="DIALOG_TITLES.EDIT" 
       modal
+      :closable="false"
       :style="{ width: '600px' }"
       class="custom-dialog-dark"
     >
@@ -257,7 +259,7 @@ const formatTemp = (temp) => {
 
 .loading-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(22, 33, 62, 0.9); display: flex; align-items: center; justify-content: center; z-index: 9999; border-radius: 8px; }
 .loading-overlay i { font-size: 2rem; color: #F9A826; }
-.descripcion-text { color: #aebbc7; font-size: 0.85rem; }
+.descripcion-text { color: white; }
 .action-btn { color: #F1F6F9 !important; }
 .action-btn:hover { background: rgba(255, 255, 255, 0.1) !important; }
 .mb-2 { margin-bottom: 0.5rem; }
@@ -273,9 +275,9 @@ const formatTemp = (temp) => {
 
 :deep(.products-table .p-datatable-thead > tr > th) { 
   background: transparent !important; /* ← Fondo transparente */
-  color: #aebbc7 !important; 
+  color: #ffffff !important; 
   font-weight: 600; 
-  font-size: 0.85rem; 
+  font-size: 1.1rem; 
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; 
   border-top: none !important;
   border-left: none !important;
