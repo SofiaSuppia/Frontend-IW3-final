@@ -417,9 +417,30 @@ onUnmounted(() => {
 
 <style scoped>
 /* 1. LAYOUT GENERAL */
-.dashboard-layout { display: flex; height: 100vh; background-color: #16213E; overflow: hidden; }
-.main-content { flex: 1; padding: 2rem; overflow-y: auto; background: linear-gradient(rgba(22, 33, 62, 0.8), rgba(22, 33, 62, 0.9)); }
-.content-container { max-width: 1600px; margin: 0 auto; }
+.dashboard-layout { 
+  display: flex; 
+  height: 100vh; 
+  width: 100%;
+  overflow: hidden;
+  background-color: #16213E;
+  margin: 0;
+  padding: 0;
+}
+
+.main-content { 
+  flex: 1; 
+  background: linear-gradient(rgba(22, 33, 62, 0.6), rgba(22, 33, 62, 0.75)), 
+              url('/assets/images/fondo.png') no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed;
+  padding: 1rem; 
+  overflow-y: auto; 
+}
+
+.content-container { 
+  max-width: 1500px; 
+  margin: 0 auto; 
+}
 
 /* 2. ENCABEZADO (Aquí arreglamos el botón a la derecha) */
 .page-header { 
@@ -433,10 +454,10 @@ onUnmounted(() => {
 .order-subtitle { color: #aebbc7; font-size: 1.8rem; margin: 0; font-weight: 300; margin-top: 0.5rem; }
 
 /* 3. GRILLAS Y PANELES (Esto hace visible el contenido) */
-.grid-layout { display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 1.5rem; }
-.grid-layout-secondary { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 1.5rem; }
-.grid-graphs { display: grid; grid-template-columns: 1.02fr 1fr; gap: 1.5rem; }
-.row-spacing { margin-bottom: 3rem; }
+.grid-layout { display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 1rem; }
+.grid-layout-secondary { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 1rem; }
+.grid-graphs { display: grid; grid-template-columns: 1.02fr 1fr; gap: 1rem; }
+.row-spacing { margin-bottom: 1rem; }
 
 .glass-panel {
     background: #0F3460; /* FONDO OSCURO (Crucial para ver el texto) */
