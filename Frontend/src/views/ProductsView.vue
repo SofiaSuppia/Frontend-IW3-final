@@ -80,7 +80,7 @@
       v-model:visible="showAddDialog" 
       :header="DIALOG_TITLES.ADD" 
       modal
-      :style="{ width: '400px' }"
+      :style="{ width: '600px' }"
       class="custom-dialog-dark"
     >
       <ProductForm 
@@ -99,7 +99,7 @@
       v-model:visible="showEditDialog" 
       :header="DIALOG_TITLES.EDIT" 
       modal
-      :style="{ width: '400px' }"
+      :style="{ width: '600px' }"
       class="custom-dialog-dark"
     >
       <ProductForm 
@@ -380,7 +380,7 @@ const formatTemp = (temp) => {
 :deep(.p-dialog.custom-dialog-dark .p-dialog-footer) { 
   background-color: #0F3460 !important;
   border-top: 1px solid rgba(255, 255, 255, 0.1) !important; 
-  padding: 1rem 1.5rem !important; 
+  padding: 3rem 1.5rem 1.5rem !important; 
 }
 
 .cancel-btn { 
@@ -511,20 +511,21 @@ body .p-multiselect-header {
 }
 
 /* --- DIÁLOGOS --- */
-body .p-dialog.custom_dialog_dark {
+body .p-dialog.custom-dialog-dark {
   background-color: #0F3460 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
-body .p-dialog.custom_dialog_dark .p-dialog-header,
-body .p-dialog.custom_dialog_dark .p-dialog-content,
-body .p-dialog.custom_dialog_dark .p-dialog-footer {
+body .p-dialog.custom-dialog-dark .p-dialog-header,
+body .p-dialog.custom-dialog-dark .p-dialog-content,
+body .p-dialog.custom-dialog-dark .p-dialog-footer {
   background-color: #0F3460 !important;
   color: #F1F6F9 !important;
 }
-body .p-dialog.custom_dialog_dark .p-dialog-header {
+body .p-dialog.custom-dialog-dark .p-dialog-header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
-body .p-dialog.custom_dialog_dark .p-dialog-footer {
+body .p-dialog.custom-dialog-dark .p-dialog-footer {
   border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding-top: 2rem !important;
 }
 </style>
