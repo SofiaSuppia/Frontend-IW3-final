@@ -196,9 +196,10 @@ onMounted(loadUsers);
 :deep(.users-table) { background: transparent !important; }
 :deep(.p-tag .p-tag-icon) { margin-right: 0.5rem !important; }
 :deep(.users-table .p-datatable-wrapper) { background: transparent !important; }
-:deep(.users-table .p-datatable-header), :deep(.users-table .p-datatable-thead > tr > th) { background: transparent !important; color: #aebbc7 !important; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; border-top: none !important; border-left: none !important; border-right: none !important; padding: 1rem 1rem; }
+:deep(.users-table .p-datatable-header), :deep(.users-table .p-datatable-thead > tr > th) { background: transparent !important; color: #ffffff !important; font-weight: 600; text-transform: uppercase; font-size: 1.1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; border-top: none !important; border-left: none !important; border-right: none !important; padding: 1rem 1rem; }
 :deep(.users-table .p-datatable-tbody > tr) { background: transparent !important; color: #F1F6F9 !important; transition: background 0.2s ease; }
-:deep(.users-table .p-datatable-tbody > tr > td) { background: transparent !important; color: #F1F6F9 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; border-top: none !important; border-left: none !important; border-right: none !important; padding: 0.75rem 1rem; }
+:deep(.users-table .p-datatable-tbody > tr > td) { background: transparent !important; color: #F1F6F9 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; border-top: none !important; border-left: none !important; border-right: none !important; padding: 1.5rem 1rem; font-size: 1rem !important; }
+:deep(.users-table .p-tag) { font-size: 0.9rem !important; font-weight: 600; padding: 0.3rem 0.75rem; }
 :deep(.users-table .p-datatable-tbody > tr:hover) { background: rgba(255, 255, 255, 0.1) !important; }
 :deep(.users-table .p-datatable-footer), :deep(.users-table .p-paginator) { background: transparent !important; color: #F1F6F9 !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; border-bottom: none !important; border-left: none !important; border-right: none !important; padding: 1rem; }
 .user-cell { display: flex; align-items: center; gap: 10px; }
