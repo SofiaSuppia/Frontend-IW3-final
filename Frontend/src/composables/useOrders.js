@@ -23,12 +23,22 @@ export function useOrders() {
   const totalRecords = ref(0);
 
   /**
-   * Órdenes filtradas según el estado activo
+   * Órdenes globales filtradas (CLIENT-SIDE)
+   * Se calculan sobre TODAS las órdenes traídas del backend
+   */
+  // const globalFilteredOrders = computed(() => { ... }); eliminado para evitar confusión con nueva lógica mixta
+
+  /**
+   * Órdenes filtradas (que se muestran en tabla)
+   * En modo Backend: Es el array tal cual viene (1 pagina).
+   * En modo Frontend: Es el array recortado manulamente en loadOrders.
    */
   const filteredOrders = computed(() => {
-    if (!activeFilter.value) return orders.value;
-    return orders.value.filter(order => order.estado === activeFilter.value);
+    return orders.value;
   });
+
+  // Total de registros para el paginador se basa en el total filtrado
+  const computedTotalRecords = computed(() => globalFilteredOrders.value.length);
 
   /**
    * Obtiene las N órdenes más recientes
@@ -92,36 +102,55 @@ export function useOrders() {
   };
 
   /**
-   * Carga todas las órdenes desde el backend
-   * @param {boolean} isPolling - Indica si es una actualización automática (sin spinner)
+   * Carga órdenes:
+   * - Si NO hay filtro: Usa paginación del backend.
+   * - Si HAY filtro: Usa "Traer Todo" + filtrado y paginación en frontend.
    */
   const loadOrders = async (isPolling = false) => {
     if (!isPolling) loading.value = true;
     try {
-      // El servicio ahora acepta page/size
-      const response = await orderService.getAllOrders(page.value, pageSize.value);
       
-      if (!isPolling) console.log("Datos recibidos:", response);
+      if (!activeFilter.value) {
+          // --- MODO BACKEND (Sin Filtros) ---
+          const response = await orderService.getAllOrders(page.value, pageSize.value);
+          
+          if (!isPolling) console.log("Datos (Paginado Backend):", response);
 
-      let data = [];
+          // Si viene en .content (Spring Page)
+          if (response && response.content) {
+            orders.value = response.content;
+            totalRecords.value = response.totalElements;
+          } else {
+             // Fallback
+             orders.value = Array.isArray(response) ? response : [];
+             totalRecords.value = orders.value.length;
+          }
 
-      // Detectar formato de respuesta para Paginación de Spring
-      if (response && response.content) {
-          data = response.content;
-          // Robustez: si totalElements no viene, usar data.length
-          totalRecords.value = (response.totalElements !== undefined) ? response.totalElements : data.length;
-      } else if (response && response.data && response.data.content) {
-          // Caso raro de envoltura extra
-          data = response.data.content;
-          totalRecords.value = (response.data.totalElements !== undefined) ? response.data.totalElements : data.length;
-      } else if (Array.isArray(response)) {
-          // Fallback por si el backend no pagina
-          data = response;
-          totalRecords.value = response.length;
+      } else {
+          // --- MODO FRONTEND (Con Filtros) ---
+          // Traemos TODO (sin page/size)
+          const response = await orderService.getAllOrders(); 
+          
+          if (!isPolling) console.log("Datos (Full Backend para Filtrado):", response);
+
+          let allData = [];
+          if (Array.isArray(response)) allData = response;
+          else if (response && response.content) allData = response.content; 
+          
+          // 1. Filtrar
+          const filtered = allData.filter(o => o.estado === activeFilter.value);
+          
+          // 2. Ordenar (por fecha recepción desc)
+          filtered.sort((a, b) => new Date(b.fechaRecepcion) - new Date(a.fechaRecepcion));
+
+          // 3. Actualizar Total
+          totalRecords.value = filtered.length;
+
+          // 4. Paginar (Slice local)
+          const start = page.value * pageSize.value;
+          const end = start + pageSize.value;
+          orders.value = filtered.slice(start, end);
       }
-
-      if (!isPolling) console.log(`Total procesado: ${data.length}`);
-      orders.value = data;
       
     } catch (error) {
       console.error(error);
@@ -155,6 +184,8 @@ export function useOrders() {
    */
   const toggleFilter = (key) => {
     activeFilter.value = activeFilter.value === key ? null : key;
+    page.value = 0; // Reset a primera página al cambiar filtro
+    loadOrders();   // Recargar con nueva estrategia
   };
 
   /**
@@ -209,7 +240,7 @@ export function useOrders() {
     // Paginación
     page,
     pageSize,
-    totalRecords,
+    totalRecords, // Volvemos a usar el ref reactivo manual
     onPageChange,
 
     // Métodos

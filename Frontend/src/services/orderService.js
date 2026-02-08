@@ -1,10 +1,15 @@
 import api from '../api/axios';
 
 export const orderService = {
-    // Obtener todas las órdenes (paginado)
-    async getAllOrders(page = 0, size = 10) {
+    // Obtener todas las órdenes (paginado o completo)
+    async getAllOrders(page = null, size = null) {
         try {
-            const response = await api.get(`/ordenes?page=${page}&size=${size}`);
+            let url = '/ordenes';
+            // Solo agregar parámetros si se solicita paginación explícita
+            if (page !== null && size !== null) {
+                url += `?page=${page}&size=${size}`;
+            }
+            const response = await api.get(url);
             return response.data;
         } catch (error) {
             console.error("Error al obtener órdenes", error);
