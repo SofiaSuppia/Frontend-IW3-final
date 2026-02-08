@@ -417,7 +417,7 @@ onUnmounted(() => {
 
 <style scoped>
 /* 1. LAYOUT GENERAL */
-.dashboard-layout { display: flex; height: 100vh; background-color: #16213E; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+.dashboard-layout { display: flex; height: 100vh; background-color: #16213E; overflow: hidden; }
 .main-content { flex: 1; padding: 2rem; overflow-y: auto; background: linear-gradient(rgba(22, 33, 62, 0.8), rgba(22, 33, 62, 0.9)); }
 .content-container { max-width: 1600px; margin: 0 auto; }
 

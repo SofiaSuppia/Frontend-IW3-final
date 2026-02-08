@@ -160,7 +160,7 @@ onUnmounted(() => {
 
 <style scoped>
 /* --- ESTILOS GENERALES --- */
-.dashboard-layout { display: flex; height: 100vh; background-color: #16213E; font-family: sans-serif; overflow: hidden; }
+.dashboard-layout { display: flex; height: 100vh; background-color: #16213E; overflow: hidden; }
 /*.main-content { flex: 1; padding: 2rem; overflow-y: auto; background: #0b1121; }*/
 .main-content {
   flex: 1;
@@ -181,7 +181,6 @@ onUnmounted(() => {
   padding: 40px 60px;
   box-shadow: 0 0 25px rgba(0,0,0,0.5);
   color: #e0e0e0;
-  font-family: 'Segoe UI', Arial, sans-serif;
   border-radius: 4px; /* Un toque sutil */
 }
 

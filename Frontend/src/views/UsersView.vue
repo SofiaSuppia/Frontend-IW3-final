@@ -170,7 +170,7 @@ onMounted(loadUsers);
 
 <style scoped>
 /* --- SOLO ESTILOS DE LAYOUT Y TABLA (Específicos de la Vista) --- */
-.dashboard-layout { display: flex; height: 100vh; width: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; background-color: #16213E; }
+.dashboard-layout { display: flex; height: 100vh; width: 100%; overflow: hidden; background-color: #16213E; }
 .main-content { flex: 1; background: linear-gradient(rgba(22, 33, 62, 0.6), rgba(22, 33, 62, 0.75)), url('/assets/images/fondo.png') no-repeat center center; background-size: cover; background-attachment: fixed; padding: 1.5rem; overflow-y: auto; }
 .content-container { max-width: 1400px; margin: 0 auto; }
 

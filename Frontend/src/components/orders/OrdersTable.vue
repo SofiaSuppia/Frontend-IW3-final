@@ -168,7 +168,6 @@ const getTagStyle = (estado) => {
 }
 
 .id-cell {
-  font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada para números */
   font-weight: 700;
   color: #64b5f6; /* Un color azul suave para resaltar el ID */
   letter-spacing: -0.5px;

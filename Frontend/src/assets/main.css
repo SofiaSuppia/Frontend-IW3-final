@@ -1,5 +1,16 @@
 @import './base.css';
 
+/* FUENTE GLOBAL UNIFICADA */
+/* Aplicamos a elementos de texto y estructura, evitando romper iconos (.pi) */
+body, button, input, textarea, select, .p-component {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+/* Protección explícita para iconos de PrimeVue */
+.pi {
+  font-family: 'primeicons' !important;
+}
+
 html, body {
   margin: 0;
   padding: 0;

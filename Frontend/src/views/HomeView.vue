@@ -108,7 +108,6 @@ onUnmounted(() => {
   height: 100vh; 
   width: 100%; 
   overflow: hidden;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #16213E;
 }
 
