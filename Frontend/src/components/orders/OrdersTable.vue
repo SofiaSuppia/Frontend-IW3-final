@@ -17,7 +17,7 @@
       emptyMessage="No hay órdenes registradas"
     >
       <!-- NUEVO: Columna ID -->
-      <Column field="id" header="ID" :sortable="true" style="width: 80px">
+      <Column field="id" header="ID" style="width: 80px">
         <template #body="{ data }">
           <span class="id-cell">#{{ data.id }}</span>
         </template>
@@ -187,7 +187,7 @@ const getTagStyle = (estado) => {
 
 /* Tag personalizado */
 .custom-tag { 
-  font-size: 0.75rem; 
+  font-size: 0.9rem; 
   font-weight: 700; 
   padding: 4px 10px; 
   border-radius: 4px;
@@ -209,11 +209,16 @@ const getTagStyle = (estado) => {
 }
 
 :deep(.orders-table .p-datatable-thead > tr > th) {
-  color: #aebbc7 !important; 
+  color: #ffffff !important; 
   font-weight: 600; 
   text-transform: uppercase; 
-  font-size: 0.8rem; 
+  font-size: 1.1rem; 
   padding: 1.5rem 1rem;
+}
+
+:deep(.orders-table .p-datatable-tbody > tr > td) {
+  padding: 1.5rem 1rem;
+  font-size: 1rem !important; 
 }
 
 :deep(.orders-table .p-datatable-tbody > tr:hover) { 
