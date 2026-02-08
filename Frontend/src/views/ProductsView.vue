@@ -32,17 +32,17 @@
             scrollHeight="600px" 
             :emptyMessage="EMPTY_TABLE_MESSAGE"
           >
-            <Column field="id" header="ID" :sortable="true" style="width: 80px" />
+            <Column field="id" header="ID" style="width: 80px" />
             
-            <Column field="descripcion" header="Descripción" :sortable="true" style="width: 50%">
+            <Column field="descripcion" header="Descripción" style="width: 50%">
               <template #body="{ data }">
                 <span class="descripcion-text">{{ data.descripcion || 'Sin descripción' }}</span>
               </template>
             </Column>
             
-            <Column field="nombre" header="Producto" :sortable="true" style="width: 25%" />
+            <Column field="nombre" header="Producto" style="width: 25%" />
             
-            <Column field="umbralTemperatura" header="Temperatura Umbral (°C)" :sortable="true" style="width: 15%">
+            <Column field="umbralTemperatura" header="Temperatura Umbral (°C)" style="width: 15%">
               <template #body="{ data }">
                 {{ formatTemp(data.umbralTemperatura) }}
               </template>
