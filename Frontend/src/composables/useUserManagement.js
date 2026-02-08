@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { userService } from '../services/userService';
 
@@ -81,25 +81,37 @@ export function useUserManagement() {
   const loadUsers = async () => {
     loading.value = true;
     try {
-      const response = await userService.getAllUsers(page.value, pageSize.value);
       
+      let response;
+      
+      if (!hasActiveFilters.value) {
+          // MODALIDAD BACKEND: Pedimos solo la página actual
+          response = await userService.getAllUsers(page.value, pageSize.value);
+      } else {
+          // MODALIDAD FRONTEND: Pedimos TODO para filtrar localmente
+          response = await userService.getAllUsers();
+      }
+
       let data = [];
-      // Verificar si response.data ES el objeto Page (caso orderService)
-      // O si response.data tiene una propiedad content (caso usersService devuelve AxiosResponse)
-      
-      const responseBody = response.data || response; // Normalizar si viene envuelto o no
+      const responseBody = response.data || response;
 
       if (responseBody && responseBody.content) {
-         // Page object standard
+         // Viene como Page (Spring)
          data = responseBody.content;
-         totalRecords.value = (responseBody.totalElements !== undefined) ? responseBody.totalElements : data.length;
+         // Si estamos en modo backend, actualizamos el total real del servidor
+         if (!hasActiveFilters.value) {
+            totalRecords.value = (responseBody.totalElements !== undefined) ? responseBody.totalElements : data.length;
+         }
       } else if (Array.isArray(responseBody)) {
-        // Fallback array
+        // Viene como Lista (Spring)
         data = responseBody;
-        totalRecords.value = data.length;
+        if (!hasActiveFilters.value) {
+             totalRecords.value = data.length;
+        }
       }
 
       users.value = (data || []).map(mapBackendToFrontend);
+      
     } catch (error) {
       console.error('Error cargando usuarios:', error);
       toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar la lista.' });
@@ -111,8 +123,22 @@ export function useUserManagement() {
   const onPageChange = (event) => {
     page.value = event.page;
     pageSize.value = event.rows;
-    loadUsers();
+    // Si estamos en modo frontend, no necesitamos recargar del servidor, solo cambiar el slice.
+    // Pero si estamos en modo backend, SÍ hay que recargar.
+    // Para simplificar, recargamos siempre si es backend, o si es front no hace daño (ya que tenemos cache de users.value pero aqui sobrescribimos).
+    // MEJORA: Si es modo frontend, NO llamar a loadUsers, solo actualizar page.
+    if (!hasActiveFilters.value) {
+        loadUsers();
+    }
   };
+  
+  // Watcher para filtros: Cuando cambian, reseteamos página y recargamos
+  // Nota: Vue 'watch' debe importarse si se usa, pero aquí lo haremos a través del setter o método expuesto si hubiera.
+  // Como `filters` es ref y se muta directamente desde la vista con v-model, necesitamos una forma de reaccionar.
+  // La mejor forma aquí es retornar un método `applyFilters` o usar un watch dentro del setup, pero
+  // `useUserManagement` es un composable. Lo ideal es exponer un método para recargar si cambian.
+  // O usar un watch interno.
+
 
   const saveUser = async (formData, isUpdate) => {
     try {
@@ -145,25 +171,83 @@ export function useUserManagement() {
   };
 
   // --- COMPUTED ---
-  const filteredUsers = computed(() => {
-    return users.value.filter(user => {
-      const roleMatch = !filters.value.role || user.role === filters.value.role;
-      const typeMatch = !filters.value.type || user.type === filters.value.type;
-      const statusMatch = !filters.value.status || user.status === filters.value.status;
-      return roleMatch && typeMatch && statusMatch;
-    });
+  
+  /**
+   * Usuarios globales filtrados (CLIENT-SIDE)
+   * Se calculan sobre TODOS los usuarios traídos del backend si hay filtros
+   */
+  const globalFilteredUsers = computed(() => {
+    let result = [...users.value];
+    
+    // Si estamos en modo Backend (sin filtros), `users.value` solo tiene 1 página,
+    // así que este filtrado no tiene mucho efecto, pero no rompe nada.
+    
+    // Si estamos en modo Frontend (con filtros), `users.value` tiene TODO,
+    // por lo que este filtrado es efectivo sobre el total.
+
+    if (hasActiveFilters.value) {
+        if (filters.value.role) {
+            result = result.filter(u => u.role === filters.value.role);
+        }
+        if (filters.value.type) {
+             result = result.filter(u => u.type === filters.value.type);
+        }
+        if (filters.value.status) {
+             result = result.filter(u => u.status === filters.value.status);
+        }
+    }
+    
+    return result;
   });
+
+  /**
+   * Usuarios a mostrar en la tabla
+   * - Modo Backend: Devuelve el array tal cual (ya viene paginado del servidor).
+   * - Modo Frontend: Toma el array global filtrado y hace el slice de la página actual.
+   */
+  const filteredUsers = computed(() => {
+    if (!hasActiveFilters.value) {
+        // Modo backend: lo que hay es lo que se muestra
+        return users.value; 
+    } else {
+        // Modo frontend: Paginación local
+        const start = page.value * pageSize.value;
+        const end = start + pageSize.value;
+        return globalFilteredUsers.value.slice(start, end);
+    }
+  });
+
+  // Detector de filtros activos
+  const hasActiveFilters = computed(() => {
+      return !!(filters.value.role || filters.value.type || filters.value.status);
+  });
+
+  // Total de registros dinámico
+  const computedTotalRecords = computed(() => {
+      if (!hasActiveFilters.value) {
+          return totalRecords.value; // El valor seteado desde el backend response
+      } else {
+          return globalFilteredUsers.value.length; // El total filtrado localmente
+      }
+  });
+
+
+  // Reactividad ante cambios en los filtros
+  watch(filters, () => {
+      page.value = 0; // Resetear a primera página
+      loadUsers();    // Recargar datos (Full o Parcial según filtros)
+  }, { deep: true });
 
   return {
     users,
     loading,
     filters,
-    filteredUsers,
+    filteredUsers, // Esta el la lista paginada correcta para la tabla
     
     // Paginación
     page,
     pageSize,
-    totalRecords,
+    totalRecords: computedTotalRecords, // Usar el total computado
     onPageChange,
     
     loadUsers,
