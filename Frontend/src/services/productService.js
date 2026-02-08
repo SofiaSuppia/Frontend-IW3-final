@@ -26,7 +26,8 @@ export default {
     // Actualizar un producto existente
     async updateProduct(id, productData) {
         try {
-            const response = await api.put(`/productos/${id}`, productData);
+            // El backend espera PUT /productos (sin ID en URL), el ID va en el body
+            const response = await api.put('/productos', productData);
             return response.data;
         } catch (error) {
             console.error("Error al actualizar producto:", error);

@@ -90,7 +90,18 @@ export function useProducts() {
     
     isSaving.value = true;
     try {
-      await productService.updateProduct(id, product);
+      // Limpiar el objeto antes de enviarlo
+      const payload = {
+        id: id, // Incluir ID por si el backend lo valida
+        nombre: product.nombre,
+        descripcion: product.descripcion,
+        umbralTemperatura: product.umbralTemperatura,
+        codProductoSap: product.codProductoSap // Mantener el código SAP
+      };
+
+      console.log('📤 Enviando actualización:', payload);
+      
+      await productService.updateProduct(id, payload);
       await loadProducts();
       showSuccessMessage(SUCCESS_MESSAGES.UPDATE);
       return true;
@@ -158,6 +169,8 @@ export function useProducts() {
   const handleApiError = (error, defaultMessage) => {
     const status = error.response?.status;
 
+    // TODO: Restaurar comportamiento de sesión expirada luego de debugear
+    /*
     if (status === 401 || status === 403) {
       const message = status === 403 
         ? ERROR_MESSAGES.SESSION_EXPIRED 
@@ -166,9 +179,12 @@ export function useProducts() {
       router.push('/login');
       return;
     }
+    */
 
-    const errorMessage = error.response?.data?.message || defaultMessage;
-    alert(`❌ ${errorMessage}`);
+    // Muestra el mensaje crudo del servidor para diagnóstico
+    console.error('🔥 Error Crudo del Servidor:', error.response?.data);
+    const errorMessage = error.response?.data || error.response?.data?.message || defaultMessage;
+    alert(`❌ DEBUG ERROR: ${JSON.stringify(errorMessage)}`);
   };
 
   const showSuccessMessage = (message) => {
