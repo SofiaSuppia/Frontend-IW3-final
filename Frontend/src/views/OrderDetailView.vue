@@ -60,9 +60,21 @@
               </div>
               <div class="info-group">
                 <label>Estado:</label> 
-                <span :class="order?.estado === 'FINALIZADA' ? 'text-green-400' : 'text-blue-400'">
-                    {{ order?.estado === 'FINALIZADA' ? 'Cargada' : 'En Proceso' }}
-                </span>
+                <Tag 
+                  v-if="order?.estado"
+                  :value="getStatusConfig(order.estado).label"
+                  :style="{
+                    background: getStatusConfig(order.estado).bgColor,
+                    color: getStatusConfig(order.estado).color,
+                    border: `1px solid ${getStatusConfig(order.estado).color}`,
+                    padding: '2px 8px'
+                  }"
+                  rounded
+                >
+                  <i :class="getStatusConfig(order.estado).icon" style="margin-right: 8px;"></i>
+                  {{ getStatusConfig(order.estado).label }}
+                </Tag>
+                <span v-else class="text-blue-400">Cargando...</span>
               </div>
             </div>
 
@@ -318,8 +330,10 @@ import Chart from 'primevue/chart';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
+import Tag from 'primevue/tag'; // NUEVO CHECK
 import Dialog from 'primevue/dialog';
 import Textarea from 'primevue/textarea';
+import { getStatusConfig } from '@/config/orderStatusConfig'; // NUEVO CHECK
 
 
 const route = useRoute();

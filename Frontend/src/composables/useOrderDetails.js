@@ -307,7 +307,7 @@ export function useOrderDetails(orderId) {
         const preset = order.value.preset || 0;
 
         // Validaciones básicas
-        if (currentMass >= preset) return { text: 'Completando...', value: 0 };
+        if (currentMass >= preset) return { text: 'Completado', value: 0 };
         
         if (chartDetails.value.length === 0) return { text: '--', value: 0 };
         
