@@ -33,6 +33,5 @@ export const INITIAL_PRODUCT = {
   descripcion: '',
   nombre: '',
   umbralTemperatura: 0,
-  density: 0,
   stock: false
 };

@@ -27,8 +27,7 @@ export function useProducts() {
 
   const formErrors = ref({
     nombre: '',
-    umbralTemperatura: '',
-    density: ''
+    umbralTemperatura: ''
   });
 
   // ===================================
@@ -145,19 +144,11 @@ export function useProducts() {
       isValid = false;
     }
 
-    if (product.density === null || product.density === undefined) {
-      formErrors.value.density = ERROR_MESSAGES.REQUIRED_FIELD;
-      isValid = false;
-    } else if (isNaN(product.density) || product.density <= 0) {
-      formErrors.value.density = 'La densidad debe ser mayor a 0';
-      isValid = false;
-    }
-
     return isValid;
   };
 
   const clearFormErrors = () => {
-    formErrors.value = { nombre: '', umbralTemperatura: '', density: '' };
+    formErrors.value = { nombre: '', umbralTemperatura: '' };
   };
 
   // ===================================
