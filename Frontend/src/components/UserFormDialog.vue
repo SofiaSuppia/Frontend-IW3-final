@@ -187,11 +187,29 @@ const onSave = () => {
 /* gap aumentado a 1.5rem par separar mas los botones */
 .dialog-footer { display: flex; justify-content: flex-end; gap: 1.5rem; padding: 0.5rem 0; }
 
-.cancel-btn { color: #aebbc7 !important; font-weight: 600; letter-spacing: 0.5px; font-size: 0.85rem; }
-.cancel-btn:hover { color: #fff !important; background: rgba(255, 255, 255, 0.05) !important; }
+.cancel-btn { 
+  background-color: #ef4444 !important; /* Rojo */
+  color: #ffffff !important; 
+  font-weight: 700; 
+  letter-spacing: 0.5px; 
+  font-size: 0.85rem; 
+  border-radius: 6px !important; 
+  padding: 0.7rem 1.25rem !important;
+  border: none !important;
+}
+.cancel-btn:hover { background-color: #dc2626 !important; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
 
-.save-btn { color: #7e73f0 !important; font-weight: 700; letter-spacing: 0.5px; font-size: 0.85rem; }
-.save-btn:hover { background: rgba(126, 115, 240, 0.1) !important; }
+.save-btn { 
+  background-color: #22c55e !important; /* Verde */
+  color: #ffffff !important; 
+  font-weight: 700; 
+  letter-spacing: 0.5px; 
+  font-size: 0.85rem; 
+  border-radius: 6px !important; 
+  padding: 0.7rem 1.25rem !important;
+  border: none !important;
+}
+.save-btn:hover { background-color: #16a34a !important; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4); }
 
 /* SOLUCIÓN ESPACIO BOTONES: Usamos flexbox directo en el botón */
 :deep(.cancel-btn),

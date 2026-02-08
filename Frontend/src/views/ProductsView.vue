@@ -222,16 +222,24 @@ const formatTemp = (temp) => {
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 .page-title { color: #F1F6F9; font-size: 2rem; margin: 0; font-weight: 600; }
 .add-btn { 
-  background-color: #4361ee !important; 
+  background-color: #E94560 !important; 
   border: none !important; 
   font-weight: 700 !important; 
+  font-size: 0.85rem !important;
   padding: 0.7rem 1.5rem !important; 
-  border-radius: 4px !important; 
+  border-radius: 6px !important; 
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
   display: flex !important;
-  gap: 0.5rem !important;
+  gap: 12px !important;
   align-items: center !important;
 }
-.add-btn:hover { background-color: #3a56d4 !important; }
+.add-btn:hover { 
+  background-color: #d63a52 !important; 
+  transform: translateY(-2px); 
+  box-shadow: 0 6px 15px rgba(233, 69, 96, 0.5); 
+}
 :deep(.add-btn .p-button-icon) { margin-right: 0 !important; }
 
 /* Contenedor de tabla con efecto glass */
@@ -375,10 +383,31 @@ const formatTemp = (temp) => {
   padding: 1rem 1.5rem !important; 
 }
 
-.cancel-btn { color: #aebbc7 !important; font-weight: 600; display: flex !important; gap: 0.5rem !important; align-items: center !important; }
-.cancel-btn:hover { color: #fff !important; background: rgba(255, 255, 255, 0.05) !important; }
-.save-btn { color: #7e73f0 !important; font-weight: 700; display: flex !important; gap: 0.5rem !important; align-items: center !important; }
-.save-btn:hover { background: rgba(126, 115, 240, 0.15) !important; }
+.cancel-btn { 
+  background-color: #ef4444 !important; /* Rojo */
+  color: #ffffff !important;
+  font-weight: 700; 
+  display: flex !important; 
+  gap: 0.5rem !important; 
+  align-items: center !important;
+  padding: 0.7rem 1.25rem !important;
+  border-radius: 6px !important;
+  border: none !important;
+}
+.cancel-btn:hover { background-color: #dc2626 !important; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
+
+.save-btn { 
+  background-color: #22c55e !important; /* Verde */
+  color: #ffffff !important;
+  font-weight: 700; 
+  display: flex !important; 
+  gap: 0.5rem !important; 
+  align-items: center !important;
+  padding: 0.7rem 1.25rem !important;
+  border-radius: 6px !important;
+  border: none !important;
+}
+.save-btn:hover { background-color: #16a34a !important; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4); }
 
 :deep(.cancel-btn .p-button-icon),
 :deep(.save-btn .p-button-icon) {

@@ -177,8 +177,8 @@ onMounted(loadUsers);
 /* HEADER */
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 .page-title { color: #F1F6F9; font-size: 2rem; margin: 0; font-weight: 600; }
-.add-user-btn { background-color: #4361ee !important; border: none !important; font-weight: 700 !important; font-size: 0.85rem !important; padding: 0.7rem 1.5rem !important; border-radius: 6px !important; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(67, 97, 238, 0.4); transition: transform 0.2s, box-shadow 0.2s; display: flex !important; gap: 12px !important;}
-.add-user-btn:hover { background-color: #3a56d4 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(67, 97, 238, 0.5); }
+.add-user-btn { background-color: #E94560 !important; border: none !important; font-weight: 700 !important; font-size: 0.85rem !important; padding: 0.7rem 1.5rem !important; border-radius: 6px !important; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4); transition: transform 0.2s, box-shadow 0.2s; display: flex !important; gap: 12px !important;}
+.add-user-btn:hover { background-color: #d63a52 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(233, 69, 96, 0.5); }
 
 /* FILTROS */
 .filters-panel { display: flex; gap: 2rem; padding: 1rem; margin-bottom: 1rem; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); align-items: flex-end; }
