@@ -261,11 +261,7 @@
                   <Column field="timestamp" header="Hora"></Column>
                   <Column field="mass" header="Masa (kg)"></Column>
                   <Column field="density" header="Densidad"></Column>
-                  <Column field="temp" header="Temp. (°C)">
-                      <template #body="{ data }">
-                          <span :style="{ color: parseFloat(data.temp) > 0 ? '#E94560' : '#4DB6AC' }">{{ data.temp }}</span>
-                      </template>
-                  </Column>
+                  <Column field="temp" header="Temp. (°C)"></Column>
                   <Column field="flow" header="Caudal"></Column>
               </DataTable>
           </div>
