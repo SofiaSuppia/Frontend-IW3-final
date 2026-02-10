@@ -7,11 +7,32 @@ class WebSocketService {
         this.subscriptions = new Map();
     }
 
-    connect(url = 'http://localhost:8080/ws', onConnectCallback) {
+    connect(url = null, onConnectCallback) {
         if (this.client && this.client.active) return;
 
+        // Lógica automática para determinar la URL del WebSocket
+        let brokerURL = url;
+        
+        if (!brokerURL) {
+            // Si no se pasa URL explícita: calcular basada en el entorno
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                // Entorno Local (Desarrollo)
+                brokerURL = 'ws://localhost:8080/ws'; 
+            } else {
+                // Producción: Usar el protocolo WS/WSS relativo al dominio actual
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const host = window.location.host; // Incluye puerto si lo hay
+                brokerURL = `${protocol}//${host}/ws`;
+            }
+        } else {
+           // Si viene http/https, convertir a ws/wss
+           brokerURL = brokerURL.replace(/^http/, 'ws');
+        }
+
+        console.log("Conectando a WS en:", brokerURL);
+
         this.client = new Client({
-            brokerURL: url.replace('http', 'ws'), // Auto-convert to ws:// or wss://
+            brokerURL: brokerURL,
             reconnectDelay: 5000,
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
