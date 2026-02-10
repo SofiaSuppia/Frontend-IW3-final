@@ -267,8 +267,8 @@
           </div>
 
           <div class="card glass-panel graph-card">
-             <h3 class="card-title-sm">Densidad (kg/m³)</h3>
-             <Chart type="line" :data="densidadData" :options="commonChartOptions" class="h-15rem" />
+             <h3 class="card-title-sm">Temperatura (°C)</h3>
+             <Chart type="line" :data="tempData" :options="commonChartOptions" class="h-15rem" />
           </div>
         </div>
 
@@ -280,8 +280,8 @@
             </div>
 
             <div class="card glass-panel graph-card">
-                <h3 class="card-title-sm">Temperatura (°C)</h3>
-                <Chart type="line" :data="tempData" :options="commonChartOptions" class="h-15rem" />
+                <h3 class="card-title-sm">Densidad (kg/m³)</h3>
+                <Chart type="line" :data="densidadData" :options="commonChartOptions" class="h-15rem" />
             </div>
         </div>
 
