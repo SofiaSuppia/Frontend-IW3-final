@@ -11,6 +11,8 @@ export default defineConfig({
     }
   },
   server: {
+    host: true,
+    allowedHosts: ['fluxgas.mooo.com'],
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
