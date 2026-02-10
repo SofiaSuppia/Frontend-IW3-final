@@ -2,13 +2,7 @@ import { ref, computed, triggerRef } from 'vue';
 import { orderService } from '../services/orderService';
 import { webSocketService } from '../services/websocketService';
 import { useToast } from 'primevue/usetoast';
-import axios from 'axios'; 
-
-const API_URL = 'http://localhost:8080/api/v1'; 
-const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
-    return token ? { Authorization: `Bearer ${token}` } : {};
-};
+import api from '../api/axios'; // Usamos la instancia configurada
 
 export function useOrderDetails(orderId) {
     const toast = useToast();
@@ -455,9 +449,10 @@ export function useOrderDetails(orderId) {
             params.append('estado', 'ATENDIDA');
             if (observacion) params.append('observacion', observacion);
 
-            await axios.put(`${API_URL}/alarmas/${alarmaId}/estado?${params.toString()}`, {}, { 
-                headers: getAuthHeaders() 
-            });
+            // Usamos api en lugar de axios directo. 
+            // La baseURL "/api/v1" ya viene configurada en api/axios.js
+            await api.put(`/alarmas/${alarmaId}/estado?${params.toString()}`, {});
+
             toast.add({ severity: 'success', summary: 'Éxito', detail: 'Alarma atendida' });
             
             const res = await orderService.getAlarmsByOrderId(orderId);
